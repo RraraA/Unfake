@@ -78,7 +78,7 @@ const Competition = () => {
         <h1 className="CSTableIntro">Credibility Score</h1>
         <img src="/CSTable.png" alt="Credibility Score Table" className="CSTable" />
       </div>
-      <button className="CompStartBtn" onClick={() => navigate("/compgame")}>Start Game</button>
+      < button className="CompStartBtn2" onClick={() => navigate("/compgame")}>Start Game</button>
     </div>
   );
 };

@@ -24,8 +24,8 @@ function App() {
         <Route path="/passwordReset" element={<PasswordReset />} />
         <Route path="/unfake" element={<UnfakeExplanation />} />
         <Route path="/proximax" element={<ProximaX />} />
-        <Route path="/rankings" element={<Rankings/>} />
-        <Route path="/accounts" element={<Accounts />} />
+        <Route path="/rankings" element={<Rankings />} />
+        <Route path="/accounts" element={<Accounts setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/competition" element={<Competition />} />
         <Route path="/compgame" element={<CompGame />} />
         <Route path="/downloads" element={<Downloads />} />
@@ -33,4 +33,5 @@ function App() {
     </div>
   );
 }
+
 export default App;

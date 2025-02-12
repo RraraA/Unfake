@@ -110,7 +110,7 @@
     font-size: 15px;
 }
 
-.CompStartBtn {
+.CompStartBtn, .CompStartBtn2 {
     background-color: rgb(249, 96, 49);
     color: white;
     border-radius: 50px;
@@ -121,7 +121,15 @@
     font-size: 15px;
     font-weight: 700;
 }
-.CompStartBtn:hover {
+
+.CompStartBtn2 {
+    width: 300px;
+    padding: 20px;
+    font-size: 20px;
+    margin: 40px 0px 100px 0px;
+}
+
+.CompStartBtn:hover, .CompStartBtn2:hover {
     background-color: rgb(25, 180, 105);
     transition: ease-in-out 0.3s;
     cursor: pointer;
@@ -176,5 +184,4 @@
     background-color: rgb(255, 115, 71);
     transition: ease-in-out 0.27s;
 }
-
 
