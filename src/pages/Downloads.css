@@ -1,0 +1,169 @@
+.DownCon {
+    height: 100vh;
+    width: 100vw;
+    padding: 80px;
+}
+
+.DownUnfakeBg {
+    flex-direction: column;
+    justify-items: center;
+}
+
+.UnfakeLogo {
+    margin: 25px 0px 10px 0px;
+    width: 600px;
+    height: 450px;
+    object-fit: cover;
+    object-position: center;
+
+}
+
+.UnfakeDes {
+    font-family: "Poppins";
+    font-weight: 100;
+    font-size: 23px;
+    width: 900px;
+    text-align: center;
+}
+
+.DownloadBtn {
+    background-color: rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    margin: 20px;
+    font-family: "Play";
+    font-size: 40px;
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    color: white;
+    border-radius: 50px;
+    transition: 0.2s ease-in-out;
+    width: 450px;
+    cursor: pointer;
+}
+
+.DownloadBtn:hover {
+    background-color: rgb(8, 62, 209);
+    border: 1px solid rgba(102, 138, 237, 0.3);
+}
+
+.ToUserGuide {
+    display: flex;
+    margin-top: 10px;
+    font-family: "Poppins";
+    font-size: 15px;
+    font-weight: lighter;
+    gap: 5px;
+    justify-items: center;
+    align-items: baseline;
+    padding: 5px;
+}
+
+.HereBtn {
+    background-color: transparent;
+    border: none;
+    font-family: "play";
+    color: rgb(255, 115, 71);
+    font-size: 18px;
+}
+
+.HereBtn:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.UserGuideCon , .FCGCon{ 
+    margin: 30px;
+    padding: 40px 70px;
+    border-radius: 30px;
+    background-color: rgb(0, 0, 0, 0.2);
+    box-shadow: 200px solid rgb(0, 0, 0, 0.6);
+}
+
+.ImageCon1, .ImageCon2, .ImageCon4 {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.GU1, .GU2, .GU4{
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 1 */
+.GuideImage1a {
+    height: 250px;
+    width: 270px;
+    margin: 40px 50px;
+}
+
+.GuideImage1b {
+    height: 250px;
+    width: 650px;
+    margin: 40px 40px;
+}
+
+/* 2 */
+
+.GuideImage2a, .GuideImage2b, .GuideImage2c{
+    height: 250px;
+    width: 400px;
+    margin: 40px 40px;
+}
+
+/* 4 */
+.GuideImage4a, .GuideImage4b, .GuideImage4f{
+    height: 150px;
+    width: 490px;
+    margin: 40px 40px;
+}
+
+.GuideImage4c {
+    height: 75px;
+    width: 400px;
+    margin: 40px 40px;
+}
+
+.GuideImage4d {
+    height: 130px;
+    width: 500px;
+    margin: 40px 40px;
+}
+
+.GuideImage4e {
+    height: 300px;
+    width: 300px;
+    margin: 40px 40px;
+}
+
+.ImageCon5 {
+    display: flex;
+    padding: 10px;
+}
+
+.GuideImage5 {
+    height: 300px;
+    width: 270px;
+    margin: 40px 50px;
+}
+
+.FCGT {
+    text-align: center;
+    padding-top: 100px;
+}
+
+.FCGList {
+    color: rgb(255, 255, 255, 0.8);
+    margin-left: 20px;
+}
+
+.FCGArtSec {
+    flex-direction: column;
+    justify-items: center;
+}
+
+.AllArts {
+    display: flex;
+    margin: 40px 0px;
+    padding-bottom: 90px;
+}
+

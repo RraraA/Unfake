@@ -1,0 +1,157 @@
+.AccountsCon {
+    text-align: center;
+    padding: 100px 50px;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .ProfileCon, .DisplayCon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 650px;
+    width: 500px;
+    margin: 40px 20px 0px 20px;
+    padding: 0px 40px;
+    border-radius: 30px;
+    background-color: rgb(0, 0, 0, 0.2);
+    box-shadow: 200px solid rgb(0, 0, 0, 0.6);
+    color: white;
+  }
+  
+.DisplayCon {
+    width: 700px;
+}
+
+  .ProfilePicCon {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background-color: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    cursor: pointer;
+    margin-top: 50px;
+  }
+  
+  .UploadedPic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .UploadText {
+    color: #555;
+    font-size: 14px;
+  }
+  
+  /* Hide file input */
+  .Input {
+    display: none;
+  }
+
+  .AccWelcome {
+    justify-self: baseline;
+    font-size: 20px;
+    padding-left: 30px;
+    font-family: "play";
+  }
+
+  .ProfileUsername {
+    justify-items: center;
+    align-items: center;
+    font-size: 50px;
+    margin-bottom: 10px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-family: "Play";
+  }
+
+  .UsernameInput::placeholder{
+    color: white;
+  }
+
+  .ProfileBtns {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0px 50px 0px;
+    width: 450px;
+    gap: 10px;
+}
+
+.ProfileBtn {
+    background-color: rgba(255, 255, 255, 0.35);
+    padding: 15px;
+    font-family: "Play";
+    font-size: 17px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    border-radius: 9px;
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.ProfileBtn:hover {
+    background-color: rgb(255, 115, 71);
+    border: 1px solid rgba(102, 138, 237, 0.3);
+}
+
+.ProfileBtn.ActiveBtn {
+    background-color: rgb(8, 62, 209);
+    border: 1px solid rgba(102, 138, 237, 0.3);
+}
+
+.Field {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0px 30px 0px;
+}
+
+.UserEditInfo{
+    color: white;
+    font-size: 25px;
+    text-align: start;
+}
+
+.AccInput {
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    border-radius: 50px;
+    width: 550px;
+    border: 1px solid rgb(255, 255, 255, 0.35);
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
+.AccInput::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.AccInput::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* Inverts the icon color */
+}
+
+.SaveBtn, .EditBtn, .ConLOBtn {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: none;
+    padding: 10px 40px;
+    margin: 20px 0px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: "play";
+}
+
+.SaveBtn:hover, .EditBtn:hover, .ConLOBtn:hover {
+    background-color: rgb(8, 62, 209)
+}

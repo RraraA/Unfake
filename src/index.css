@@ -1,0 +1,258 @@
+/* Universal styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-image: url('/Unfake1.png'), url('/Unfake2.png'); /* Background Settings Start */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat; 
+  background-attachment: fixed;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: "Poppins", sans-serif;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.21);
+  z-index: -1;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden; /* Disables horizontal scroll */
+}
+
+/* Ensure all content fits within viewport */
+.container {
+  max-width: 100%;
+  overflow-x: hidden;
+} /* Background Settings End */
+
+body { /* Font setter start */
+  font-family: "Play", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500; /* Adjust weight as needed */
+  font-style: normal;
+}
+
+h1{
+  font-family: "Play", sans-serif;
+  font-weight: 700;
+  color: white;
+}
+
+h2, h3 {
+  font-family: "Play", sans-serif;
+  font-weight: 500;
+  color: white;
+}
+
+p {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400; /* Regular text */
+  color: white;
+} /* Font setter end */
+
+.auth-container { /* Sign In / Sign Up start */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.auth-box { /* Form Box */
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
+  padding: 30px;
+  border-radius: 30px;
+  width: 450px;
+  text-align: center;
+}
+
+.EmailLable, .PassLabel, .ConPassLabel {
+  margin-top: 10px;
+}
+
+.EmailPH::placeholder, .PassPH::placeholder, .ConPassPH::placeholder {
+  color: rgb(255, 255, 255, 0.4);
+}
+
+.auth-box input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 20px;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  font-size: 16px;
+  color: white;
+}
+
+.SRL {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 25px ;
+  font-size: 15px;
+  color: rgb(255, 255, 255, 0.7);
+  font-weight: 70px;
+}
+
+.SULink, .SILink{
+  padding: 0px 0px 0px 5px;
+  color: rgb(255, 115, 71);
+  font-weight: lighter;
+}
+
+.SULink:hover, .SILink:hover{
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.Sign {
+  font-weight: 800;
+  font-size: 50px;
+  padding: 10px 0px;
+  color: white;
+}
+
+.auth-box label {
+  font-weight: 200;
+  display: block;
+  text-align: left;
+  margin-bottom: 10px;
+  color: white;
+  font-size: 20px;
+}
+
+.ResetPass {
+  display: flex;
+  font-size: 12px;
+  justify-content: center;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.ForgotPass {
+  color: rgb(255, 255, 255, 0.75);
+  padding: 0px 5px 0px 0px;
+}
+.Reset {
+  color: white;
+}
+
+.Reset:hover {
+  color: rgb(255, 115, 71);
+  cursor: pointer;
+}
+
+.NextBtn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 40px;
+  border: 1.5px solid rgb(255, 255, 255, 0.6);
+  background: rgb(255, 255, 255, 0.3);
+  color: white;
+  font-weight: 900px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out, color 0.3s ease-in-out;
+  font-size: 18px;
+  align-content: center;
+}
+
+.NextBtn:hover {
+  background: rgb(8, 62, 209);
+  color: white;
+  border: 1.5px solid rgb(112, 149, 249, 0.2);
+}
+
+.SWXBtn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 40px;
+  border: 1.5px solid rgb(0, 0, 0);
+  background: rgb(0, 0, 0, 0.43);
+  color: white;
+  cursor: pointer;
+  transition: 0.3s ease-in-out, color 0.3s ease-in-out;
+  font-size: 18px;
+  align-content: center;
+}
+
+.SWXBtn:hover {
+  background: rgb(255, 255, 255);
+  color: black;
+  border: 1.5px solid rgb(0, 0, 0, 0.25);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .auth-box {
+    width: 90%;
+  }
+} 
+
+/* Sign In / Sign Up Start */
+.UnfakePromo{ /* Unfake Logo & slogan besides Sign In/Up Start*/
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 130px;
+  margin-top: -80px;
+  align-items: center;
+}
+
+.UnfakeLogo1 {
+  background-image: url('./Logo.png');
+  background-size: contain; /* Ensures the logo fits properly */
+  background-repeat: no-repeat;
+  width: 510px;
+  height: 510px;
+}
+
+.Slogan {
+  font-size: 40px;
+  font-weight: 550;
+  margin-top: -50px;
+  text-align: center;
+}
+
+.SloDes {
+  text-align: center;
+  font-size: 25px;
+  font-weight: 100;
+  padding: 10px;
+} /* Unfake Logo & slogan besides Sign In/Up end*/
+
+::-webkit-scrollbar { /* Hide scrollbar by default start */
+  width: 8px; 
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb { /* Show Scrollbar handle */
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+} /* Hide scrollbar by default end */
+
+

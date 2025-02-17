@@ -1,0 +1,196 @@
+.UnfakeCon {
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    padding: 90px;
+}
+
+/* Video Background */
+.VideoCon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.VideoCon::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.SSVideoBG {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+}
+
+/* Logo Animation */
+.UnfakeIntro1 {
+    opacity: 0;  /* Correct opacity */
+    transform: translateX(-60%);
+    transition: transform 1.5s ease-in-out, opacity 1s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 50px;
+    align-items: center;
+    justify-items: center;
+}
+
+/* When the 'show' class is added */
+.UnfakeIntro1.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.UnfakePageLogo {
+    width: 650px;
+    height: 440px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 40px 0px 10px 0px;
+    position: relative;
+    z-index: 2;
+}
+
+.UnfakeIntroDes {
+    width: 650px;
+
+}
+
+.UnSlogan{
+    font-size: 17px;
+    text-align: justify;
+    margin: 5px;
+}
+
+.IntroCon{
+    padding: 20px;
+    justify-items: center;
+}
+
+.IntroBtns {
+    margin: 20px;
+    display: flex;
+    gap: 30px;
+}
+
+.UnfakeBtn {
+    width: 250px;
+    padding: 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 40px;
+    border: 1.5px solid rgb(255, 255, 255, 0.4);
+    background: rgb(0, 0, 0, 0.25);
+    color: white;
+    font-weight: 900px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out, color 0.3s ease-in-out;
+    font-size: 18px;
+    align-content: center;
+  }
+  
+  .UnfakeBtn:hover {
+    background: rgb(8, 62, 209);
+    color: white;
+    border: 1.5px solid rgb(112, 149, 249, 0.2);
+  }
+
+/* Vision and Mission Section */
+.VMCon {
+    overflow: hidden;
+    padding: 30px;
+    border-radius: 30px;
+    background: rgb(0, 0, 0, 0.25);
+}
+
+.VisionCon, .MissionCon {
+    padding: 30px;
+    text-align: justify;
+}
+
+.VisionT, .MissionT {
+    margin-bottom: 10px;
+}
+
+/* Articles Section */
+.ArticlesSecCon {
+    padding: 30px;
+    margin: 60px 0px;
+    justify-items: center;
+    align-items: center;
+}
+
+.ArticlesSection {
+    display: flex;
+    margin: 30px 0px;
+}
+
+.Article {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    justify-items: center;
+    align-items: center;
+    margin: 0px 10px 10px 10px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.FNPic {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    overflow: hidden;
+    object-position: center;
+    border-radius: 10px;
+}
+
+.ArtT {
+    display: inline-block;
+    padding: 15px 0px;
+    font-size: 25px;
+    text-align: justify;
+    margin-bottom: auto;
+}
+
+.ArtP {
+    width: 100%;
+    padding-bottom: 20px;
+    display: inline-block;
+    margin: auto;
+    align-items: center;
+    color: rgb(255, 255, 255, 0.65);
+}
+
+.Art {
+    display: inline-block;
+    margin-top: auto; /* Pushes link to bottom */
+    color: rgb(255, 115, 71);
+    font-weight: bold;
+    font-size: 30px;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+    margin-bottom: 10px;
+}
+
+.Art:hover {
+    text-decoration: underline;
+}
