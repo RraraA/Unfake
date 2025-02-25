@@ -16,12 +16,13 @@ const SignUp = ({ setIsAuthenticated }) => {
     number: false,
     special: false,
   });
-  const [showPassword,setShowPassword] = useState(false);
-  const [showConPassword,setShowConPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConPassword, setShowConPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); // For general errors
+  const [isChecked, setIsChecked] = useState(false); // Track checkbox state
   const navigate = useNavigate();
   
-  const checkPasswordStrength = (password) => { // Check password strength dynamically
+  const checkPasswordStrength = (password) => {
     setPasswordStrength({
       length: password.length >= 8,
       uppercase: /[A-Z]/.test(password),
@@ -31,14 +32,14 @@ const SignUp = ({ setIsAuthenticated }) => {
     });
   };
 
-  const handlePasswordChange = (e) => { // Handle Password Input Change
+  const handlePasswordChange = (e) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
     checkPasswordStrength(newPassword);
   };
 
   const handleSignUp = async () => {
-    setErrorMessage(""); // Reset previous errors
+    setErrorMessage("");
 
     if (!email || !password || !confirmPassword) {
       setErrorMessage("Please fill in all fields.");
@@ -50,20 +51,23 @@ const SignUp = ({ setIsAuthenticated }) => {
       return;
     }
 
-    const { length, uppercase, lowercase, number, special } = passwordStrength; // Check if all password strength conditions are met
+    const { length, uppercase, lowercase, number, special } = passwordStrength;
     if (!length || !uppercase || !lowercase || !number || !special) {
-      setErrorMessage(
-        "Your password is not strong enough. Ensure it meets all requirements."
-      );
+      setErrorMessage("Your password is not strong enough. Ensure it meets all requirements.");
       return;
     }
 
-    try { // Call signUpUser from database.js
+    if (!isChecked) {
+      setErrorMessage("You must agree to the Privacy Policy before signing up.");
+      return;
+    }
+
+    try {
       const user = await signUpUser(email, password);
       alert("User signed up successfully!");
 
       setIsAuthenticated(true);
-      navigate("/unfake"); // Navigate to the next page after successful signup
+      navigate("/unfake");
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -100,7 +104,7 @@ const SignUp = ({ setIsAuthenticated }) => {
           <label className="PassLabel">Password:</label>
           <div className="PassCon">
             <input
-              type= {showPassword ? "text" : "password"}
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={handlePasswordChange}
               placeholder="Enter a new password"
@@ -108,12 +112,19 @@ const SignUp = ({ setIsAuthenticated }) => {
               className="PassInput"
               id="signUp_password"
             />
-            <button type="button"className="ShowPassBtn" onClick={() => setShowPassword(!showPassword)}>{showPassword ? <FaEye /> : <FaEyeSlash />}</button>
+            <button
+              type="button"
+              className="ShowPassBtn"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
           </div>
+
           <label className="ConPassLabel">Confirm Password:</label>
           <div className="PassCon">
             <input
-              type= {showConPassword ? "text" : "password"}
+              type={showConPassword ? "text" : "password"}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Re-enter your password"
@@ -121,18 +132,42 @@ const SignUp = ({ setIsAuthenticated }) => {
               className="ConPassPH"
               id="confirm_password"
             />
-            <button type="button" className="ShowPassBtn" onClick={() => setShowConPassword(!showConPassword)}>{showConPassword ? <FaEye /> : <FaEyeSlash />}</button>
+            <button
+              type="button"
+              className="ShowPassBtn"
+              onClick={() => setShowConPassword(!showConPassword)}
+            >
+              {showConPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
           </div>
+
           <div className="PwStrength">
-            <p className="PwRec" style={{ color: passwordStrength.length ? "#90EE90" : "pink" }}> •8 characters</p>
-            <p className="PwRec" style={{ color: passwordStrength.uppercase ? "#90EE90" : "pink" }}> •At least 1 uppercase letter (A-Z)</p>
-            <p className="PwRec" style={{ color: passwordStrength.lowercase ? "#90EE90" : "pink" }}> •At least 1 lowercase letter (a-z)</p>
-            <p className="PwRec" style={{ color: passwordStrength.number ? "#90EE90" : "pink" }}> •At least 1 number (0-9)</p>
-            <p className="PwRec" style={{ color: passwordStrength.special ? "#90EE90" : "pink" }}> •At least 1 special character (!@#$%^&*)</p>
+            <p className="PwRec" style={{ color: passwordStrength.length ? "#90EE90" : "pink" }}> • 8 characters</p>
+            <p className="PwRec" style={{ color: passwordStrength.uppercase ? "#90EE90" : "pink" }}> • At least 1 uppercase letter (A-Z)</p>
+            <p className="PwRec" style={{ color: passwordStrength.lowercase ? "#90EE90" : "pink" }}> • At least 1 lowercase letter (a-z)</p>
+            <p className="PwRec" style={{ color: passwordStrength.number ? "#90EE90" : "pink" }}> • At least 1 number (0-9)</p>
+            <p className="PwRec" style={{ color: passwordStrength.special ? "#90EE90" : "pink" }}> • At least 1 special character (!@#$%^&*)</p>
           </div>
 
           {/* Display error messages */}
           {errorMessage && <p className="error-message" style={{ color: "red" }}>{errorMessage}</p>}
+          <hr className="Line"/>
+
+          <div className="PPCon">
+            <div className="CheckBoxCon">
+              <input
+                type="checkbox"
+                id="agreeCheck"
+                className="CheckBox"
+                checked={isChecked}
+                onChange={(e) => setIsChecked(e.target.checked)}
+              />
+            </div>
+            <p className="PPLabel">
+              By continuing, you are agreeing to our  
+              <a href="/privacy" className="PPLink"> Privacy Policy</a>.
+            </p>
+          </div>
 
           <button
             className="NextBtn"
@@ -143,7 +178,8 @@ const SignUp = ({ setIsAuthenticated }) => {
               !passwordStrength.uppercase ||
               !passwordStrength.lowercase ||
               !passwordStrength.number ||
-              !passwordStrength.special
+              !passwordStrength.special ||
+              !isChecked
             }
           >
             Next

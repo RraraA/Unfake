@@ -159,11 +159,11 @@
 .SaveBtn, .EditBtn, .ConLOBtn {
     background-color: rgba(0, 0, 0, 0.3);
     color: white;
-    border: none;
-    padding: 10px 40px;
+    border: 0.5px solid rgb(255, 255, 255, 0.6);
+    padding: 10px 70px;
     margin: 20px 0px;
     font-size: 18px;
-    border-radius: 5px;
+    border-radius: 30px;
     cursor: pointer;
     font-family: "play";
 }

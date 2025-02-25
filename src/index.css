@@ -180,6 +180,44 @@ p {
   cursor: pointer;
 }
 
+.Line {
+  height: 0.1px;
+  opacity: 0.5;
+  background-color: brown;
+  margin: 10px 0px;
+
+}
+
+.PPCon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding: 5px;
+  margin-top: -10px;
+}
+
+.CheckBox {
+  cursor: pointer;
+}
+
+.PPLabel {
+  font-size: 12px;
+  color: rgb(255, 255, 255, 0.7);
+}
+
+.PPLink {
+  color: rgb(255, 130, 92);
+  padding-left: 5px;
+  text-decoration: none;
+  font-weight: 300;
+}
+
+.PPLink:hover {
+  color: rgb(78, 143, 255);
+  text-decoration: underline;
+}
+
 .NextBtn {
   width: 100%;
   padding: 12px;

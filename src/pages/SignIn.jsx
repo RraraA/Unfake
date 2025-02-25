@@ -8,12 +8,18 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 const SignIn = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] =useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isChecked, setIsChecked] = useState(false); // Track checkbox state
   const navigate = useNavigate();
 
   const handleSignIn = async () => {
     if (!email || !password) {
       alert("Please fill in all fields");
+      return;
+    }
+
+    if (!isChecked) {
+      alert("You must agree to the Privacy Policy before signing in.");
       return;
     }
 
@@ -67,14 +73,33 @@ const SignIn = ({ setIsAuthenticated }) => {
               required 
               className="PassInput"
             />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="ShowPassBtn"> {showPassword ? <FaEye  /> : <FaEyeSlash  />}</button>
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="ShowPassBtn"> 
+              {showPassword ? <FaEye  /> : <FaEyeSlash  />}
+            </button>
           </div>
 
           <div className="ResetPass">
             <p className="ForgotPass">Forgot your Password?</p>
             <p className="Reset" onClick={() => navigate ("/passwordReset")}>Reset Now</p>
           </div>
+          <hr className="Line"/>
 
+          {/* Checkbox Section */}
+          <div className="PPCon">
+            <div className="CheckBoxCon">
+              <input 
+                type="checkbox" 
+                id="agreeCheck" 
+                className="CheckBox" 
+                checked={isChecked}
+                onChange={(e) => setIsChecked(e.target.checked)}
+              />
+            </div>
+            <p className="PPLabel">
+              By continuing, you are agreeing to our  
+              <a href="/privacy" className="PPLink"> Privacy Policy</a>.
+            </p>
+          </div>
           <button className="NextBtn" type="button" onClick={handleSignIn}>Next</button>
           <button className="SWXBtn">Login with X</button>
         </form>

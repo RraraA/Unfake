@@ -308,9 +308,17 @@ const Accounts = ({ setIsAuthenticated }) => {
           </div>
         )}
 
-        {activeSection === "MyHistory" && <div className="MyHistory"><h2>My History</h2><p>No activity recorded yet.</p></div>}
+        {activeSection === "MyHistory" && 
+        <div className="MyHistory">
+          <h2>My History</h2>
+          <p>No activity recorded yet.</p>
+        </div>}
 
-        {activeSection === "LogOut" && <div className="LogOut"><h2>Log Out</h2><button className="ConLOBtn" onClick={handleLogOut}>Confirm Log Out</button></div>}
+        {activeSection === "LogOut" && 
+        <div className="LogOut">
+          <h2>Log Out</h2>
+          <button className="ConLOBtn" onClick={handleLogOut}>Confirm Log Out</button>
+        </div>}
       </div>
     </div>
   );

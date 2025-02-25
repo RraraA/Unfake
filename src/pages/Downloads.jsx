@@ -20,7 +20,7 @@ const Downloads = () => {
           <p><br />
             - Click on the “Download” button above. <br />
             - Open your browser's extensions panel. <br />
-            - Navigate "Unfake and turn on the toggle for Unfake.
+            - Navigate "Unfake" and turn on the toggle for Unfake.
           </p>
           <img src="/DownloadPics/1A.png" className="GuideImage1a"/>
           <img src="/DownloadPics/1B.png" className="GuideImage1b" />
@@ -105,7 +105,9 @@ const Downloads = () => {
           Detecting Fake News on X using AI, Crowdsourcing, and Blockchain Methodologies.
         </p>
         
-        <button className="DownloadBtn">Download</button>
+        <a href="https://github.com/user-attachments/files/18936900/UnfakeEx.zip" download>
+          <button class="DownloadBtn">Download Unfake</button>
+        </a>
 
         <div className="ToUserGuide">
           <p>Learn how to use Unfake</p>
