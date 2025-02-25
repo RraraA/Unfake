@@ -139,7 +139,7 @@ const Downloads = () => {
       
       {/* Article Section */}
       <div className="FCGArtSec">
-        <h1>Articles</h1>
+        <h1>How to Fact Check?</h1>
         <div className="AllArts">
           <div className="Article">
             <img src="https://s3.amazonaws.com/libapps/customers/132/images/How-to-Spot-Fake-News.jpg" className="FNPic" alt="How to Spot Fake News"/>

@@ -93,9 +93,10 @@ iframe {
   border-radius: 50px;
   margin: 50px;
   padding: 10px;
-   width: 275px;
+  width: 275px;
   height: 45px;
   font-size: 15px;
+  cursor: pointer;
 }
 
 .BackButton:hover {
