@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUpUser } from "../database.jsx"; // Import the signup function
 import { FaEye, FaEyeSlash } from "react-icons/fa"; 
+import { signUpWithX } from "../firebaseConfig"; // Import Twitter Sign-up function
 
 const SignUp = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
@@ -73,11 +74,24 @@ const SignUp = ({ setIsAuthenticated }) => {
     }
   };
 
+  const handleXSignUp = async () => {
+    try {
+        const user = await signUpWithX();
+        alert("X Sign-Up Successful!");
+        setIsAuthenticated(true);
+        navigate("/unfake");
+    } catch (error) {
+        alert("X Sign-Up Failed: " + error.message);
+    }
+  };
+
   return (
     <div className="auth-container">
       {/* Logo on the left */}
       <div className="UnfakePromo">
-        <div className="UnfakeLogo1"></div>
+        <div className="UnfakeLogo1">
+          <img src="./Logo.png" alt="" />
+        </div>
         <h2 className="Slogan"> To Simplify Truths</h2>
         <p className="SloDes">A fake news detection tool for X</p>
       </div>
@@ -164,8 +178,9 @@ const SignUp = ({ setIsAuthenticated }) => {
               />
             </div>
             <p className="PPLabel">
-              By continuing, you are agreeing to our  
-              <a href="/privacy" className="PPLink"> Privacy Policy</a>.
+              You are agreeing to our  
+              <a href="/privacy" className="PPLink">Privacy Policy</a> &
+              <a href="/terms" className="TermsLink">Terms of Service</a>
             </p>
           </div>
 
@@ -184,7 +199,9 @@ const SignUp = ({ setIsAuthenticated }) => {
           >
             Next
           </button>
-          <button className="SWXBtn">Login with X</button>
+          <button className="SWXBtn" type="button" onClick={handleXSignUp}>
+            Sign Up with X
+          </button>
         </form>
       </div>
     </div>
