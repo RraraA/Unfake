@@ -84,7 +84,8 @@ import { useState, useEffect } from "react";
 import "./Rankings.css";
 import { useNavigate } from "react-router-dom";
 import { getLeaderboard } from "../database";
-import { auth } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
+import { doc, updateDoc } from "firebase/firestore";
 
 const Rankings = () => {
   const [users, setUsers] = useState([]);
@@ -97,12 +98,28 @@ const Rankings = () => {
       try {
         const leaderboardData = await getLeaderboard();
 
-        // ✅ Sort users: prioritize ranked users first
+        // // ✅ Sort users: prioritize ranked users first
+        // const sortedUsers = leaderboardData
+        //   .filter((user) => user.rank > 0) // Remove rank 0 users from display
+        //   .sort((a, b) => a.rank - b.rank);
+
+        // setUsers(sortedUsers);
+
+        // Sort users: prioritize score first (higher is better), then time (lower is better)
         const sortedUsers = leaderboardData
           .filter((user) => user.rank > 0) // Remove rank 0 users from display
-          .sort((a, b) => a.rank - b.rank);
+          .sort((a, b) => {
+            // First, compare by score (higher score is better)
+            if (b.score !== a.score) {
+              return b.score - a.score;
+            }
 
-        setUsers(sortedUsers);
+            // If scores are equal, compare by time (lower time is better)
+            return a.time - b.time;
+          });
+
+        setUsers(sortedUsers); // Set the sorted users to state
+
 
         // ✅ Find the logged-in user
         const authUser = auth.currentUser;
@@ -110,6 +127,7 @@ const Rankings = () => {
           const foundUser = leaderboardData.find((user) => user.uid === authUser.uid);
           setCurrentUser(foundUser || null);
         }
+        await updateRanks(sortedUsers);
       } catch (error) {
         console.error("❌ Error fetching leaderboard:", error.message);
       } finally {
@@ -119,6 +137,26 @@ const Rankings = () => {
 
     fetchLeaderboard();
   }, []);
+
+  const updateRanks = async (sortedUsers) => {
+    try {
+      for (let i = 0; i < sortedUsers.length; i++) {
+        const user = sortedUsers[i];
+        const userRef = doc(db, "leaderboard", user.id);
+
+        // Assign rank based on position in sorted list (rank starts from 1)
+        const rank = i + 1; // Rank starts at 1
+
+        // Update the rank in Firestore
+        await updateDoc(userRef, { rank: rank });
+
+        console.log(`Updated rank for ${user.username}: ${rank}`);
+      }
+    } catch (error) {
+      console.error("❌ Error updating ranks:", error);
+    }
+  };
+
 
   // ✅ Format time for display
   const formatTime = (seconds) => {

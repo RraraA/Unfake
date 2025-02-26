@@ -2,10 +2,11 @@
 import "./Accounts.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, db } from "../firebaseConfig";
+import { auth, db, storage } from "../firebaseConfig";
 import { doc, setDoc, collection, query, where, getDocs, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged, signOut, updatePassword } from "firebase/auth";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
 
 const Accounts = ({ setIsAuthenticated }) => {
@@ -75,71 +76,89 @@ const Accounts = ({ setIsAuthenticated }) => {
   }, [setIsAuthenticated, navigate]);
 
   // 🔥 Handle Profile Picture Upload
-  const handlePicUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setProfilePic(imageUrl);
-    }
-  };
-
-  // 🔥 Update user data in Firestore when saving changes
-  // const handleSaveChanges = async () => {
-  //   setIsEditing(false);
-
-  //   // ✅ Check if there are actual changes
-  //   if (
-  //     username === originalData.username &&
-  //     birthdate === originalData.birthdate &&
-  //     (!newPassword || newPassword !== confirmNewPassword)
-  //   ) {
-  //     alert("No changes detected.");
-  //     return;
-  //   }
-
-  //   try {
-  //     const user = auth.currentUser;
-  //     if (user) {
-  //       const userCollection = collection(db, "user");
-  //       const q = query(userCollection, where("uid", "==", user.uid));
-  //       const querySnapshot = await getDocs(q);
-
-  //       const leadCollection = collection(db, "leaderboard")
-  //       const leadQ = query(leadCollection, where("uid", "==", user.uid));
-  //       const leadQuerySnapshot = await getDocs(leadQ);
-
-
-  //       if (!querySnapshot.empty) {
-  //         const userRef = doc(db, "user", querySnapshot.docs[0].id);
-  //         let updates = {};
-
-  //         // ✅ Update only if changes were made
-  //         if (username !== originalData.username) updates.username = username;
-  //         if (birthdate !== originalData.birthdate) updates.birthdate = birthdate;
-
-  //         if (Object.keys(updates).length > 0) {
-  //           await updateDoc(userRef, updates);
-  //         }
-
-  //         // 🔥 Update password only if changed
-  //         if (newPassword && newPassword === confirmNewPassword) {
-  //           await updatePassword(user, newPassword);
-  //           alert("Password updated successfully!");
-  //           setNewPassword("");
-  //           setConfirmNewPassword("");
-  //         }
-
-  //         alert("Changes Saved Successfully!");
-  //         setOriginalData({ username, birthdate });
-  //       } else {
-  //         console.warn("Cannot update, user document not found.");
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating user info:", error);
-  //     alert("Failed to save changes.");
+  // const handlePicUpload = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     const imageUrl = URL.createObjectURL(file);
+  //     setProfilePic(imageUrl);
   //   }
   // };
+
+  // const handlePicUpload = async (event) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     try {
+  //       // Create a reference to the location in Firebase Storage
+  //       const storageRef = ref(storage, `profilePics/${auth.currentUser.uid}`);
+  
+  //       // Upload the image to Firebase Storage
+  //       await uploadBytes(storageRef, file);
+  
+  //       // Get the download URL for the uploaded image
+  //       const imageUrl = await getDownloadURL(storageRef);
+  
+  //       // Update the user's profile picture URL in Firestore
+  //       const user = auth.currentUser;
+  //       if (user) {
+  //         const userRef = doc(db, "user", user.uid);
+  //         await updateDoc(userRef, {
+  //           profilePic: imageUrl, // Save the image URL to Firestore
+  //         });
+  
+  //         // Set the image URL in state to display it
+  //         setProfilePic(imageUrl);
+  //         alert("Profile picture uploaded successfully!");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error uploading profile picture:", error);
+  //       alert("Failed to upload profile picture.");
+  //     }
+  //   }
+  // };
+
+  const handlePicUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      try {
+        // Get the current user's UID
+        const user = auth.currentUser;
+        if (user) {
+          // Check if there's an existing profile picture to delete
+          const existingPicRef = ref(storage, `profilePics/${user.uid}`);
+  
+          // Try to delete the old profile picture
+          await deleteObject(existingPicRef).catch((error) => {
+            // Handle error if no previous picture exists (it's okay if no file exists)
+            if (error.code !== 'storage/object-not-found') {
+              console.error("Error deleting old profile picture:", error);
+              alert("Failed to delete old profile picture.");
+            }
+          });
+          
+          // Upload new profile picture
+          const storageRef = ref(storage, `profilePics/${user.uid}`);
+          await uploadBytes(storageRef, file);
+          
+          // Get the download URL for the newly uploaded image
+          const imageUrl = await getDownloadURL(storageRef);
+  
+          // Update the user's profile picture URL in Firestore
+          const userRef = doc(db, "user", user.uid);
+          await updateDoc(userRef, {
+            profilePic: imageUrl, // Save the image URL to Firestore
+          });
+  
+          // Set the new profile picture URL in state to display it
+          setProfilePic(imageUrl);
+          alert("Profile picture uploaded successfully!");
+        }
+      } catch (error) {
+        console.error("Error uploading profile picture:", error);
+        alert("Failed to upload profile picture.");
+      }
+    }
+  };
+  
 
   const handleSaveChanges = async () => {
     setIsEditing(false);
