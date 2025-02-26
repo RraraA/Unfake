@@ -1,6 +1,8 @@
 import "./CompGame.css"; // Import CSS
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { auth, db } from "../firebaseConfig"; // Firebase imports
+import { doc, updateDoc } from "firebase/firestore"; // Firestore functions
 
 const CompGame = () => {
   const navigate = useNavigate();
@@ -22,6 +24,30 @@ const CompGame = () => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+  };
+
+
+  // Function to update the user's time in Firestore
+  const updateUserTime = async (timeRemaining) => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = doc(db, "leaderboard", user.uid); // Reference to user's document in Firestore
+        await updateDoc(userRef, {
+          time: timeRemaining, // Save the remaining time to Firestore
+        });
+
+        console.log(`✅ User's remaining time (${timeRemaining}) saved in Firestore.`);
+      }
+    } catch (error) {
+      console.error("❌ Error updating user's time:", error);
+    }
+  };
+
+  // When the user clicks "Back to Competition", save the time and navigate back
+  const handleBackToCompetition = () => {
+    updateUserTime(timeLeft); // Save remaining time
+    navigate("/competition"); // Navigate back to the competition page
   };
 
   return (
@@ -60,7 +86,7 @@ const CompGame = () => {
         </iframe>
       </div>
 
-      <button className="BackButton" onClick={() => navigate("/competition")}>Back to Competition</button>
+      <button className="BackButton" onClick={handleBackToCompetition}>Back to Competition</button>
     </div>
   );
 };
