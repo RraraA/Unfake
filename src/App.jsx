@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, Router } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/NavBar";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -15,6 +15,7 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import { auth } from "./firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -33,10 +34,21 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  function RedirectToUnfake() {
+    const navigate = useNavigate();
+  
+    useEffect(() => {
+      navigate("/unfake"); // Redirects from "/" to "/unfake"
+    }, [navigate]);
+  
+    return null;
+  }
   return (
     <div>
-       <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setUserData={setUserData} />
+      <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setUserData={setUserData} />
       <Routes>
+        {/* Default Route */}
+        <Route path="/" element={<RedirectToUnfake />} />
         <Route path="/signin" element={<SignIn setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/signup" element={<SignUp setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/passwordReset" element={<PasswordReset />} />
