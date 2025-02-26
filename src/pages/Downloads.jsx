@@ -104,6 +104,10 @@ const Downloads = () => {
         <p className="UnfakeDes">
           Detecting Fake News on X using AI, Crowdsourcing, and Blockchain Methodologies.
         </p>
+
+        <a href="https://github.com/user-attachments/files/18936900/UnfakeEx.zip" download>
+          <button className="DownloadBtn">Download Unfake</button>
+          </a>
         
         <a href="https://github.com/user-attachments/files/18936900/UnfakeEx.zip" download>
           <button class="DownloadBtn">Download Unfake</button>
