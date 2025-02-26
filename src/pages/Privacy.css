@@ -14,11 +14,7 @@
     margin-top: 10%;
 }
 
-.PrivT {
-    font-size: 60px;
-}
-
-.PrivContent {
+.PrivConCon {
     background: rgba(255, 255, 255, 0.15);
     border-radius: 20px;
     border: none;
@@ -26,6 +22,22 @@
     margin: 20px 80px;
     text-align: justify;
     width: 950px;
+    text-align: justify;
+}
+
+.Policies {
+    margin: 60px 0px;
+}
+
+.FPPGLink, .UnfakeInfoLink {
+    text-decoration: none;
+    color: rgb(102, 199, 255);
+    cursor: pointer;
+}
+
+.FPPGLink:hover, .UnfakeInfoLink:hover {
+    color: rgb(255, 133, 63);
+    text-decoration: underline;
 }
 
 .PrivBackBtn {

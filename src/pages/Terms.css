@@ -1,0 +1,67 @@
+.TermsCon {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 40px 20px;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    width: 100vw;
+    height: 100vh;
+    overflow-y: auto;
+    border-radius: 20px;
+    overflow-x: hidden;
+    margin-top: 10%;
+}
+
+.PrivT {
+    font-size: 60px;
+}
+
+.TermsConCon {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    border: none;
+    padding: 40px;
+    margin: 20px 80px;
+    text-align: justify;
+    width: 950px;
+    text-align: justify;
+}
+
+.Policies {
+    margin: 60px 0px;
+}
+
+.ContactLink, .UnfakeInfoLink {
+    text-decoration: none;
+    color: rgb(102, 199, 255);
+    cursor: pointer;
+}
+
+.ContactLink:hover, .UnfakeInfoLink:hover {
+    color: rgb(255, 133, 63);
+    text-decoration: underline;
+}
+
+.TermsBackBtn {
+    width: 300px;
+    padding: 12px;
+    margin-top: 10px;
+    margin-bottom: 100px;
+    border-radius: 40px;
+    border: 1.5px solid rgb(255, 255, 255, 0.6);
+    background: rgb(255, 255, 255, 0.3);
+    color: white;
+    font-weight: 900px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out, color 0.3s ease-in-out;
+    font-size: 18px;
+    align-content: center;
+  }
+  
+  .TermsBackBtn:hover {
+    background: rgb(8, 62, 209);
+    color: white;
+    border: 1.5px solid rgb(112, 149, 249, 0.2);
+  }

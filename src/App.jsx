@@ -12,6 +12,7 @@ import Competition from "./pages/Competition";
 import CompGame from "./pages/CompGame";
 import Downloads from "./pages/Downloads";
 import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import { auth } from "./firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -47,6 +48,7 @@ function App() {
         <Route path="/compgame" element={<CompGame />} />
         <Route path="/downloads" element={<Downloads />} />
         <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
         <Route path="/accounts" element={<Accounts userData={userData} />} />
       </Routes>
     </div>
