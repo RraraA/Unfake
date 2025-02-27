@@ -118,6 +118,7 @@
     padding: 30px;
     border-radius: 30px;
     background: rgb(0, 0, 0, 0.25);
+    margin-bottom: 100px;
 }
 
 .VisionCon, .MissionCon {
@@ -131,7 +132,7 @@
 
 /* Articles Section */
 .ArticlesSecCon {
-    padding: 30px;
+    padding-bottom: 60px;
     margin: 60px 0px;
     justify-items: center;
     align-items: center;
@@ -140,17 +141,20 @@
 .ArticlesSection {
     display: flex;
     margin: 30px 0px;
+    justify-items: center;
+    align-items: center;
 }
 
 .Article {
     display: flex;
     flex-direction: column;
     padding: 20px;
+    width: 330px;
+    height: auto;
     justify-items: center;
     align-items: center;
     margin: 0px 10px 10px 10px;
     background: rgba(0, 0, 0, 0.2);
-    padding: 20px;
     border-radius: 20px;
 }
 
@@ -167,7 +171,7 @@
     display: inline-block;
     padding: 15px 0px;
     font-size: 25px;
-    text-align: justify;
+    text-align: center;
     margin-bottom: auto;
 }
 
