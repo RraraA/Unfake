@@ -71,7 +71,7 @@
 }
 
 .UserGuideCon { 
-    margin: 30px;
+    margin: 100px 30px;
     padding: 40px 70px;
     border-radius: 30px;
     background-color: rgb(0, 0, 0, 0.2);
@@ -184,14 +184,72 @@
 }
 
 .FCGArtSec {
+    display: flex;
     flex-direction: column;
-    justify-items: center;
-    margin-top: 60px;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 70px;
 }
 
 .AllArts {
     display: flex;
-    margin: 40px 0px;
-    padding-bottom: 90px;
+    margin: 30px 0px;
+    justify-items: center;
+    align-items: center;
 }
 
+.Article {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    width: 330px;
+    height: 470px;
+    justify-items: center;
+    align-items: center;
+    margin: 0px 10px 10px 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+}
+
+.FNPic {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    overflow: hidden;
+    object-position: center;
+    border-radius: 10px;
+}
+
+.ArtT {
+    display: inline-block;
+    padding: 15px 0px;
+    font-size: 25px;
+    text-align: justify;
+    margin-bottom: auto;
+    width: 100%;
+}
+
+.ArtP {
+    width: 300px;
+    padding-bottom: 20px;
+    display: inline-block;
+    margin: auto;
+    align-items: center;
+    color: rgb(255, 255, 255, 0.65);
+    text-align: left;
+}
+
+.Art {
+    display: inline-block;
+    margin-top: auto;
+    color: rgb(255, 115, 71);
+    font-weight: bold;
+    font-size: 30px;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+    margin-bottom: 10px;
+}
+
+.Art:hover {
+    text-decoration: underline;
+}

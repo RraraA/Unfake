@@ -278,7 +278,7 @@ return (
     </div>
 
     {/* Game Explanation Section */}
-    <div className="CompExp">
+    <div ref={gameExpRef} className="CompExp">
       <h1 className="GameExp">How Does Our Game Work?</h1>
       <p className="GameDes">
         The Fact-Checking game happens 3 times a year (Jan, April, and Sep),
@@ -297,6 +297,7 @@ return (
       <h1 className="CSTableIntro">Credibility Score</h1>
       <img src="/CSTable.png" alt="Credibility Score Table" className="CSTable" />
     </div>
+    <button className="CompStartBtn2" onClick={startGame}>Start</button>
   </div>
 );
 };
