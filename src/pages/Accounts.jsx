@@ -1,4 +1,3 @@
-
 import "./Accounts.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +6,8 @@ import { doc, setDoc, collection, query, where, getDocs, updateDoc } from "fireb
 import { onAuthStateChanged, signOut, updatePassword } from "firebase/auth";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
+
 
 
 const Accounts = ({ setIsAuthenticated }) => {
@@ -22,8 +23,10 @@ const Accounts = ({ setIsAuthenticated }) => {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConPassword, setShowConPassword] = useState(false);
+
 
   // 🔥 Fetch user data from Firestore
   useEffect(() => {
@@ -75,47 +78,6 @@ const Accounts = ({ setIsAuthenticated }) => {
     return () => unsubscribe();
   }, [setIsAuthenticated, navigate]);
 
-  // 🔥 Handle Profile Picture Upload
-  // const handlePicUpload = (event) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     const imageUrl = URL.createObjectURL(file);
-  //     setProfilePic(imageUrl);
-  //   }
-  // };
-
-  // const handlePicUpload = async (event) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     try {
-  //       // Create a reference to the location in Firebase Storage
-  //       const storageRef = ref(storage, `profilePics/${auth.currentUser.uid}`);
-  
-  //       // Upload the image to Firebase Storage
-  //       await uploadBytes(storageRef, file);
-  
-  //       // Get the download URL for the uploaded image
-  //       const imageUrl = await getDownloadURL(storageRef);
-  
-  //       // Update the user's profile picture URL in Firestore
-  //       const user = auth.currentUser;
-  //       if (user) {
-  //         const userRef = doc(db, "user", user.uid);
-  //         await updateDoc(userRef, {
-  //           profilePic: imageUrl, // Save the image URL to Firestore
-  //         });
-  
-  //         // Set the image URL in state to display it
-  //         setProfilePic(imageUrl);
-  //         alert("Profile picture uploaded successfully!");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error uploading profile picture:", error);
-  //       alert("Failed to upload profile picture.");
-  //     }
-  //   }
-  // };
-
   const handlePicUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -159,58 +121,85 @@ const Accounts = ({ setIsAuthenticated }) => {
     }
   };
   
-
   const handleSaveChanges = async () => {
     setIsEditing(false);
-  
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("No authenticated user found.");
+        return;
+    }
+
     // ✅ Check if there are actual changes
     if (
-      username === originalData.username &&
-      birthdate === originalData.birthdate &&
-      (!newPassword || newPassword !== confirmNewPassword)
+        username === originalData.username &&
+        birthdate === originalData.birthdate &&
+        (!newPassword || newPassword !== confirmNewPassword)
     ) {
-      alert("No changes detected.");
-      return;
+        alert("No changes detected.");
+        return;
     }
-  
+
     try {
-      const user = auth.currentUser;
-      if (user) {
-        // ✅ Directly reference the documents by UID
         const userRef = doc(db, "user", user.uid);
         const leaderboardRef = doc(db, "leaderboard", user.uid);
-  
-        // 🔥 Prepare update data
         let updates = {};
+
         if (username !== originalData.username) updates.username = username;
         if (birthdate !== originalData.birthdate) updates.birthdate = birthdate;
-  
-        // ✅ Update the Firestore user collection
+
+        // ✅ Update user profile info in Firestore
         if (Object.keys(updates).length > 0) {
-          await updateDoc(userRef, updates);
-          console.log("✅ User profile updated in Firestore!");
+            await updateDoc(userRef, updates);
+            if (updates.username) {
+                await updateDoc(leaderboardRef, { username: updates.username });
+            }
         }
-  
-        // ✅ If username was updated, update the leaderboard as well
-        if (updates.username) {
-          await updateDoc(leaderboardRef, { username: updates.username });
-          console.log("✅ Username updated in leaderboard!");
-        }
-  
-        // 🔥 Update password only if changed
+
+        // ✅ **Update password only if user provides a new one**
         if (newPassword && newPassword === confirmNewPassword) {
-          await updatePassword(user, newPassword);
-          alert("Password updated successfully!");
-          setNewPassword("");
-          setConfirmNewPassword("");
+            try {
+                // 🔥 **Ensure old password is entered**
+                if (!password || password === "........") {
+                    alert("Please enter your current password before changing it.");
+                    return;
+                }
+
+                // 🔥 **Re-authenticate user before updating password**
+                const credential = EmailAuthProvider.credential(user.email, password);
+                await reauthenticateWithCredential(user, credential);  // ✅ Fix: Reauthentication added
+
+                // 🔥 **Update password in Firebase Authentication**
+                await updatePassword(user, newPassword);
+
+                // 🔥 **Update Firestore with a timestamp**
+                await updateDoc(userRef, { passwordUpdatedAt: new Date() });
+
+                alert("Password updated successfully! You will need to use your new password next time.");
+                setNewPassword("");
+                setConfirmNewPassword("");
+                setPassword(""); // Clear old password field
+
+            } catch (error) {
+                console.error("Error updating password:", error);
+
+                // Handle specific Firebase errors
+                if (error.code === "auth/wrong-password") {
+                    alert("Incorrect current password. Please try again.");
+                } else if (error.code === "auth/too-many-requests") {
+                    alert("Too many failed attempts. Please try again later.");
+                } else {
+                    alert("Failed to update password. Please log in again and try.");
+                }
+            }
         }
-  
+
         alert("Changes Saved Successfully!");
         setOriginalData({ username, birthdate });
-      }
     } catch (error) {
-      console.error("Error updating user info:", error);
-      alert("Failed to save changes.");
+        console.error("Error updating user info:", error);
+        alert("Failed to save changes.");
     }
   };
 
@@ -276,41 +265,61 @@ const Accounts = ({ setIsAuthenticated }) => {
             </div>       
 
             {/* Password Fields Only Show When Editing */}
-            {isEditing && (
-              <>
+            {isEditing && (<>
+                {/* Old Password Input */}
                 <div className="Field">
-                  <label className="UserEditInfo">Password:</label>
+                  <label className="UserEditInfo">Old Password:</label>
                   <div className="PasswordCon">
                     <input 
-                    type={showPassword ? "text" : "password"}
-                    placeholder="New Password" 
-                    value={newPassword} 
-                    onChange={(e) => setNewPassword(e.target.value)} 
-                    onFocus={() => setIsChangingPassword(true)} 
-                    className="AccInput" 
+                      type={showOldPassword ? "text" : "password"} 
+                      placeholder="Old Password" 
+                      value={password} 
+                      onChange={(e) => setPassword(e.target.value)} 
+                      onFocus={() => setIsChangingPassword(true)} 
+                      className="AccInput" 
                     />
-                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="ShowAccPassBtn">
-                        {showPassword ? <FaEye  /> : <FaEyeSlash  />}
+                    <button type="button" onClick={() => setShowOldPassword(!showOldPassword)} className="ShowAccPassBtn">
+                      {showOldPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
                   </div>
                 </div>
+
+                {/* New Password Input */}
+                <div className="Field">
+                  <label className="UserEditInfo">New Password:</label>
+                  <div className="PasswordCon">
+                    <input 
+                      type={showNewPassword ? "text" : "password"} 
+                      placeholder="New Password" 
+                      value={newPassword} 
+                      onChange={(e) => setNewPassword(e.target.value)} 
+                      onFocus={() => setIsChangingPassword(true)} 
+                      className="AccInput" 
+                    />
+                    <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="ShowAccPassBtn">
+                      {showNewPassword ? <FaEye /> : <FaEyeSlash />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Confirm New Password Input */}
                 {isChangingPassword && (
                   <div className="Field">
-                    <label className="UserEditInfo">Confirm Password:</label>
+                    <label className="UserEditInfo">Confirm New Password:</label>
                     <div className="PasswordCon">
                       <input
-                      type={showConPassword ? "text" : "password"}
-                      placeholder="Confirm Password"
-                      value={confirmNewPassword}
-                      onChange={(e) => setConfirmNewPassword(e.target.value)}
-                      className="AccInput"
+                        type={showConPassword ? "text" : "password"}
+                        placeholder="Confirm Password"
+                        value={confirmNewPassword}
+                        onChange={(e) => setConfirmNewPassword(e.target.value)}
+                        className="AccInput"
                       />
                       <button type="button" onClick={() => setShowConPassword(!showConPassword)} className="ShowAccPassBtn">
-                          {showConPassword ? <FaEye  /> : <FaEyeSlash  />}
+                        {showConPassword ? <FaEye /> : <FaEyeSlash />}
                       </button>
-                      </div>
                     </div>
-                  )}
+                  </div>
+                )}
               </>
             )}
 
@@ -344,7 +353,3 @@ const Accounts = ({ setIsAuthenticated }) => {
 };
 
 export default Accounts;
-
-
-
-
