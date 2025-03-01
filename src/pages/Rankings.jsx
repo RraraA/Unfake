@@ -98,25 +98,30 @@ const Rankings = () => {
       try {
         const leaderboardData = await getLeaderboard();
 
-        // // ✅ Sort users: prioritize ranked users first
+        // // Sort users: prioritize score first (higher is better), then time (lower is better)
         // const sortedUsers = leaderboardData
         //   .filter((user) => user.rank > 0) // Remove rank 0 users from display
-        //   .sort((a, b) => a.rank - b.rank);
+        //   .sort((a, b) => {
+        //     // First, compare by score (higher score is better)
+        //     if (b.score !== a.score) {
+        //       return b.score - a.score;
+        //     }
 
-        // setUsers(sortedUsers);
+        //     // If scores are equal, compare by time (lower time is better)
+        //     return a.time - b.time;
+        //   });
 
-        // Sort users: prioritize score first (higher is better), then time (lower is better)
+        // ✅ Ensure all users are included before ranking (even rank 0 or undefined)
         const sortedUsers = leaderboardData
-          .filter((user) => user.rank > 0) // Remove rank 0 users from display
-          .sort((a, b) => {
-            // First, compare by score (higher score is better)
-            if (b.score !== a.score) {
-              return b.score - a.score;
-            }
+        .sort((a, b) => {
+          // First, compare by score (higher score is better)
+          if (b.score !== a.score) {
+            return b.score - a.score;
+          }
 
-            // If scores are equal, compare by time (lower time is better)
-            return a.time - b.time;
-          });
+          // If scores are equal, compare by time (lower time is better)
+          return b.time - a.time;
+        });
 
         setUsers(sortedUsers); // Set the sorted users to state
 
