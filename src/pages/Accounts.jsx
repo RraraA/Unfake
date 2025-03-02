@@ -80,50 +80,55 @@ const Accounts = ({ setIsAuthenticated }) => {
 
   const handlePicUpload = async (event) => {
     const file = event.target.files[0];
+
+    const allowedFormats = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    
+    if (!allowedFormats.includes(file.type)) {
+        alert("Invalid file format! Please upload a JPG, PNG, GIF, or WEBP image.");
+        return;
+    }
+
     if (file) {
-      try {
-        // Get the current user's UID
-        const user = auth.currentUser;
-        if (user) {
-          // Check if there's an existing profile picture to delete
-          const existingPicRef = ref(storage, `profilePics/${user.uid}`);
-  
-          // Try to delete the old profile picture
-          await deleteObject(existingPicRef).catch((error) => {
-            // Handle error if no previous picture exists (it's okay if no file exists)
-            if (error.code !== 'storage/object-not-found') {
-              console.error("Error deleting old profile picture:", error);
-              alert("Failed to delete old profile picture.");
+        try {
+            // Get the current user's UID
+            const user = auth.currentUser;
+            if (user) {
+                // Check if there's an existing profile picture to delete
+                const existingPicRef = ref(storage, `profilePics/${user.uid}`);
+
+                // Try to delete the old profile picture
+                await deleteObject(existingPicRef).catch((error) => {
+                    if (error.code !== "storage/object-not-found") {
+                        console.error("Error deleting old profile picture:", error);
+                        alert("Failed to delete old profile picture.");
+                    }
+                });
+
+                // Upload new profile picture
+                const storageRef = ref(storage, `profilePics/${user.uid}`);
+                await uploadBytes(storageRef, file);
+
+                // Get the download URL for the newly uploaded image
+                const imageUrl = await getDownloadURL(storageRef);
+
+                // Update the user's profile picture URL in Firestore
+                const userRef = doc(db, "user", user.uid);
+                await updateDoc(userRef, { profilePic: imageUrl });
+
+                // Set the new profile picture URL in state to display it
+                setProfilePic(imageUrl);
+                alert("Profile picture uploaded successfully!");
             }
-          });
-          
-          // Upload new profile picture
-          const storageRef = ref(storage, `profilePics/${user.uid}`);
-          await uploadBytes(storageRef, file);
-          
-          // Get the download URL for the newly uploaded image
-          const imageUrl = await getDownloadURL(storageRef);
-  
-          // Update the user's profile picture URL in Firestore
-          const userRef = doc(db, "user", user.uid);
-          await updateDoc(userRef, {
-            profilePic: imageUrl, // Save the image URL to Firestore
-          });
-  
-          // Set the new profile picture URL in state to display it
-          setProfilePic(imageUrl);
-          alert("Profile picture uploaded successfully!");
+        } catch (error) {
+            console.error("Error uploading profile picture:", error);
+            alert("Failed to upload profile picture.");
         }
-      } catch (error) {
-        console.error("Error uploading profile picture:", error);
-        alert("Failed to upload profile picture.");
-      }
     }
   };
+
   
   const handleSaveChanges = async () => {
     setIsEditing(false);
-
     const user = auth.currentUser;
 
     if (!user) {
@@ -131,7 +136,7 @@ const Accounts = ({ setIsAuthenticated }) => {
         return;
     }
 
-    // ✅ Check if there are actual changes
+    // Check if there are actual changes
     if (
         username === originalData.username &&
         birthdate === originalData.birthdate &&
@@ -158,7 +163,17 @@ const Accounts = ({ setIsAuthenticated }) => {
         }
 
         // ✅ **Update password only if user provides a new one**
-        if (newPassword && newPassword === confirmNewPassword) {
+        if (newPassword) {
+            if (newPassword === password) {
+                alert("New password cannot be the same as the old password.");
+                return;
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                alert("New password and confirm password do not match.");
+                return;
+            }
+
             try {
                 // 🔥 **Ensure old password is entered**
                 if (!password || password === "........") {
@@ -166,14 +181,14 @@ const Accounts = ({ setIsAuthenticated }) => {
                     return;
                 }
 
-                // 🔥 **Re-authenticate user before updating password**
+                // **Re-authenticate user before updating password**
                 const credential = EmailAuthProvider.credential(user.email, password);
-                await reauthenticateWithCredential(user, credential);  // ✅ Fix: Reauthentication added
+                await reauthenticateWithCredential(user, credential);
 
-                // 🔥 **Update password in Firebase Authentication**
+                // **Update password in Firebase Authentication**
                 await updatePassword(user, newPassword);
 
-                // 🔥 **Update Firestore with a timestamp**
+                // **Update Firestore with a timestamp**
                 await updateDoc(userRef, { passwordUpdatedAt: new Date() });
 
                 alert("Password updated successfully! You will need to use your new password next time.");
@@ -184,7 +199,6 @@ const Accounts = ({ setIsAuthenticated }) => {
             } catch (error) {
                 console.error("Error updating password:", error);
 
-                // Handle specific Firebase errors
                 if (error.code === "auth/wrong-password") {
                     alert("Incorrect current password. Please try again.");
                 } else if (error.code === "auth/too-many-requests") {
