@@ -74,17 +74,6 @@ const SignUp = ({ setIsAuthenticated }) => {
     }
   };
 
-  const handleXSignUp = async () => {
-    try {
-        const user = await signUpWithX();
-        alert("X Sign-Up Successful!");
-        setIsAuthenticated(true);
-        navigate("/unfake");
-    } catch (error) {
-        alert("X Sign-Up Failed: " + error.message);
-    }
-  };
-
   return (
     <div className="auth-container">
       {/* Logo on the left */}
@@ -196,12 +185,7 @@ const SignUp = ({ setIsAuthenticated }) => {
               !passwordStrength.special ||
               !isChecked
             }
-          >
-            Next
-          </button>
-          <button className="SWXBtn" type="button" onClick={handleXSignUp}>
-            Sign Up with X
-          </button>
+          >Next</button>
         </form>
       </div>
     </div>

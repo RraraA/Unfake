@@ -37,7 +37,6 @@ function App() {
     <div>
       <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setUserData={setUserData} />
       <Routes>
-        {/* ✅ Redirect '/' to '/unfake' */}
         <Route path="/" element={<Navigate to="/unfake" replace />} />
         <Route path="/signin" element={<SignIn setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/signup" element={<SignUp setIsAuthenticated={setIsAuthenticated} />} />

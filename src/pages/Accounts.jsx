@@ -28,7 +28,7 @@ const Accounts = ({ setIsAuthenticated }) => {
   const [showConPassword, setShowConPassword] = useState(false);
 
 
-  // 🔥 Fetch user data from Firestore
+  //Fetch user data from Firestore
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -154,7 +154,7 @@ const Accounts = ({ setIsAuthenticated }) => {
         if (username !== originalData.username) updates.username = username;
         if (birthdate !== originalData.birthdate) updates.birthdate = birthdate;
 
-        // ✅ Update user profile info in Firestore
+        //Update user profile info in Firestore
         if (Object.keys(updates).length > 0) {
             await updateDoc(userRef, updates);
             if (updates.username) {
@@ -162,7 +162,7 @@ const Accounts = ({ setIsAuthenticated }) => {
             }
         }
 
-        // ✅ **Update password only if user provides a new one**
+        //Update password only if user provides a new one
         if (newPassword) {
             if (newPassword === password) {
                 alert("New password cannot be the same as the old password.");
@@ -175,20 +175,20 @@ const Accounts = ({ setIsAuthenticated }) => {
             }
 
             try {
-                // 🔥 **Ensure old password is entered**
+                //Ensure old password is entered
                 if (!password || password === "........") {
                     alert("Please enter your current password before changing it.");
                     return;
                 }
 
-                // **Re-authenticate user before updating password**
+                //Re-authenticate user before updating password
                 const credential = EmailAuthProvider.credential(user.email, password);
                 await reauthenticateWithCredential(user, credential);
 
-                // **Update password in Firebase Authentication**
+                //Update password in Firebase Authentication
                 await updatePassword(user, newPassword);
 
-                // **Update Firestore with a timestamp**
+                //Update Firestore with a timestamp
                 await updateDoc(userRef, { passwordUpdatedAt: new Date() });
 
                 alert("Password updated successfully! You will need to use your new password next time.");
