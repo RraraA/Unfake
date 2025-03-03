@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebaseConfig"; // Import Firebase auth
+import { auth } from "../firebaseConfig";
 import { sendPasswordResetEmail } from "firebase/auth";
 import "./PasswordReset.css";
 
 const PasswordReset = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Error message state
-  const [successMessage, setSuccessMessage] = useState(""); // Success message state
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // Added loading state
 
   const handlePasswordResetRequest = async () => {
     setErrorMessage("");
@@ -19,6 +20,8 @@ const PasswordReset = () => {
       return;
     }
 
+    setIsLoading(true); // Disable button during request
+
     try {
       await sendPasswordResetEmail(auth, email);
       setSuccessMessage(
@@ -26,9 +29,17 @@ const PasswordReset = () => {
       );
     } catch (error) {
       console.error("Error sending password reset email:", error);
-      setErrorMessage(
-        "Failed to send password reset email. Please check your email and try again."
-      );
+      if (error.code === "auth/user-not-found") {
+        setErrorMessage("No account found with this email.");
+      } else if (error.code === "auth/invalid-email") {
+        setErrorMessage("Invalid email format. Please enter a valid email.");
+      } else {
+        setErrorMessage(
+          "Failed to send password reset email. Please try again later."
+        );
+      }
+    } finally {
+      setIsLoading(false); // Re-enable button after request
     }
   };
 
@@ -45,11 +56,20 @@ const PasswordReset = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <button className="ResetBtn" onClick={handlePasswordResetRequest}>
-          Send Reset Link
+        {errorMessage && <p className="ErrorMessage">{errorMessage}</p>}
+        {successMessage && <p className="SuccessMessage">{successMessage}</p>}
+        <button
+          className="ResetBtn"
+          onClick={handlePasswordResetRequest}
+          disabled={isLoading} // Disable button while loading
+        >
+          {isLoading ? "Sending..." : "Send Reset Link"}
         </button>
       </div>
-      <button className="BackBtn" onClick={() => navigate("/signin")}>Back to Sign In</button>
+      <p className="ResetMessage">Please visit Accounts and reset to New Strong Password upon reseting your password</p>
+      <button className="BackBtn" onClick={() => navigate("/signin")}>
+        Back to Sign In
+      </button>
     </div>
   );
 };

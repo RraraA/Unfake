@@ -126,95 +126,111 @@ const Accounts = ({ setIsAuthenticated }) => {
     }
   };
 
-  
   const handleSaveChanges = async () => {
     setIsEditing(false);
     const user = auth.currentUser;
-
+  
     if (!user) {
-        alert("No authenticated user found.");
-        return;
+      alert("No authenticated user found.");
+      return;
     }
-
-    // Check if there are actual changes
+  
+    // If no changes detected, do nothing
     if (
-        username === originalData.username &&
-        birthdate === originalData.birthdate &&
-        (!newPassword || newPassword !== confirmNewPassword)
+      username === originalData.username &&
+      birthdate === originalData.birthdate &&
+      (!newPassword || newPassword !== confirmNewPassword)
     ) {
-        alert("No changes detected.");
-        return;
+      alert("No changes detected.");
+      return;
     }
-
+  
     try {
-        const userRef = doc(db, "user", user.uid);
-        const leaderboardRef = doc(db, "leaderboard", user.uid);
-        let updates = {};
-
-        if (username !== originalData.username) updates.username = username;
-        if (birthdate !== originalData.birthdate) updates.birthdate = birthdate;
-
-        //Update user profile info in Firestore
-        if (Object.keys(updates).length > 0) {
-            await updateDoc(userRef, updates);
-            if (updates.username) {
-                await updateDoc(leaderboardRef, { username: updates.username });
-            }
+      const userRef = doc(db, "user", user.uid);
+      const leaderboardRef = doc(db, "leaderboard", user.uid);
+      let updates = {};
+  
+      if (username !== originalData.username) updates.username = username;
+      if (birthdate !== originalData.birthdate) updates.birthdate = birthdate;
+  
+      // Update user profile info in Firestore
+      if (Object.keys(updates).length > 0) {
+        await updateDoc(userRef, updates);
+        if (updates.username) {
+          await updateDoc(leaderboardRef, { username: updates.username });
         }
-
-        //Update password only if user provides a new one
-        if (newPassword) {
-            if (newPassword === password) {
-                alert("New password cannot be the same as the old password.");
-                return;
-            }
-
-            if (newPassword !== confirmNewPassword) {
-                alert("New password and confirm password do not match.");
-                return;
-            }
-
-            try {
-                //Ensure old password is entered
-                if (!password || password === "........") {
-                    alert("Please enter your current password before changing it.");
-                    return;
-                }
-
-                //Re-authenticate user before updating password
-                const credential = EmailAuthProvider.credential(user.email, password);
-                await reauthenticateWithCredential(user, credential);
-
-                //Update password in Firebase Authentication
-                await updatePassword(user, newPassword);
-
-                //Update Firestore with a timestamp
-                await updateDoc(userRef, { passwordUpdatedAt: new Date() });
-
-                alert("Password updated successfully! You will need to use your new password next time.");
-                setNewPassword("");
-                setConfirmNewPassword("");
-                setPassword(""); // Clear old password field
-
-            } catch (error) {
-                console.error("Error updating password:", error);
-
-                if (error.code === "auth/wrong-password") {
-                    alert("Incorrect current password. Please try again.");
-                } else if (error.code === "auth/too-many-requests") {
-                    alert("Too many failed attempts. Please try again later.");
-                } else {
-                    alert("Failed to update password. Please log in again and try.");
-                }
-            }
+      }
+  
+      // ✅ **Password update with validation**
+      if (newPassword) {
+        if (newPassword === password) {
+          alert("New password cannot be the same as the old password.");
+          return;
         }
-
-        alert("Changes Saved Successfully!");
-        setOriginalData({ username, birthdate });
+  
+        if (newPassword !== confirmNewPassword) {
+          alert("New password and confirm password do not match.");
+          return;
+        }
+  
+        // ✅ Validate password strength
+        const errors = validatePassword(newPassword);
+        if (errors.length > 0) {
+          alert("Password does not meet the criteria:\n" + errors.join("\n"));
+          return;
+        }
+  
+        try {
+          if (!password || password === "........") {
+            alert("Please enter your current password before changing it.");
+            return;
+          }
+  
+          // ✅ Re-authenticate user before updating password
+          const credential = EmailAuthProvider.credential(user.email, password);
+          await reauthenticateWithCredential(user, credential);
+  
+          // ✅ Update password in Firebase Authentication
+          await updatePassword(user, newPassword);
+  
+          // ✅ Update Firestore with a timestamp
+          await updateDoc(userRef, { passwordUpdatedAt: new Date() });
+  
+          alert("Password updated successfully! You will need to use your new password next time.");
+          setNewPassword("");
+          setConfirmNewPassword("");
+          setPassword(""); // Clear old password field
+        } catch (error) {
+          console.error("Error updating password:", error);
+  
+          if (error.code === "auth/wrong-password") {
+            alert("Incorrect current password. Please try again.");
+          } else if (error.code === "auth/too-many-requests") {
+            alert("Too many failed attempts. Please try again later.");
+          } else {
+            alert("Failed to update password. Please log in again and try.");
+          }
+        }
+      }
+  
+      alert("Changes Saved Successfully!");
+      setOriginalData({ username, birthdate });
     } catch (error) {
-        console.error("Error updating user info:", error);
-        alert("Failed to save changes.");
+      console.error("Error updating user info:", error);
+      alert("Failed to save changes.");
     }
+  };
+  
+  const validatePassword = (password) => {
+    const errors = [];
+  
+    if (password.length < 8) errors.push("• Must be at least 8 characters.");
+    if (!/[A-Z]/.test(password)) errors.push("• Must contain at least 1 uppercase letter.");
+    if (!/[a-z]/.test(password)) errors.push("• Must contain at least 1 lowercase letter.");
+    if (!/[0-9]/.test(password)) errors.push("• Must contain at least 1 number.");
+    if (!/[@$!%*?&]/.test(password)) errors.push("• Must contain at least 1 special character (!@#$%^&*).");
+  
+    return errors; // Returns an array of missing criteria
   };
 
   const handleEditInfo = () => {
