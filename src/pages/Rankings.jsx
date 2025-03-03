@@ -15,34 +15,48 @@ const Rankings = () => {
     const fetchLeaderboard = async () => {
       try {
         const leaderboardData = await getLeaderboard();
-        // Ensure all users are included before ranking (even rank 0 or undefined)
-        const sortedUsers = leaderboardData
-        .sort((a, b) => {
-          // First, compare by score (higher score is better)
+  
+        // Sort users by score (descending) and time (ascending)
+        const sortedUsers = leaderboardData.sort((a, b) => {
           if (b.score !== a.score) {
             return b.score - a.score;
           }
-
-          //If scores are equal, compare by time (lower time is better)
-          return b.time - a.time;
+          return a.time - b.time; // Lower time is better
         });
-
-        setUsers(sortedUsers); // Set the sorted users to state
-
-        //Find the logged-in user
+  
+        // Assign ranks while handling ties
+        let previousRank = 0;
+        let previousScore = null;
+        let previousTime = null;
+  
+        sortedUsers.forEach((user, index) => {
+          if (user.score === previousScore && user.time === previousTime) {
+            user.rank = previousRank; // Same rank for tied users
+          } else {
+            user.rank = index + 1; // Rank starts at 1
+            previousRank = user.rank;
+            previousScore = user.score;
+            previousTime = user.time;
+          }
+        });
+  
+        setUsers(sortedUsers);
+  
+        // Find the logged-in user
         const authUser = auth.currentUser;
         if (authUser) {
-          const foundUser = leaderboardData.find((user) => user.uid === authUser.uid);
+          const foundUser = sortedUsers.find((user) => user.uid === authUser.uid);
           setCurrentUser(foundUser || null);
         }
+  
         await updateRanks(sortedUsers);
       } catch (error) {
-        console.error(" Error fetching leaderboard:", error.message);
+        console.error("Error fetching leaderboard:", error.message);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchLeaderboard();
   }, []);
 
