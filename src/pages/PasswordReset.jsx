@@ -47,7 +47,7 @@ const PasswordReset = () => {
     <div className="PRCon">
       <h1>Reset Password</h1>
       <div className="ResetInfo">
-        <p className="ResetMessage">Enter your email and set a new password.</p>
+        <p className="ResetMessage">Enter your email to set a temporary password to access your account.</p>
         <input
           type="email"
           placeholder="Please enter your email"
@@ -66,7 +66,7 @@ const PasswordReset = () => {
           {isLoading ? "Sending..." : "Send Reset Link"}
         </button>
       </div>
-      <p className="ResetMessage">Please visit Accounts and reset to New Strong Password upon reseting your password</p>
+      <p className="ResetMessage">For security reasons, please <span className="ResetBold">Reset Password Again</span> via the accounts page</p>
       <button className="BackBtn" onClick={() => navigate("/signin")}>
         Back to Sign In
       </button>
