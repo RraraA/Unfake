@@ -1,85 +1,3 @@
-// import { useState, useEffect, useMemo } from "react";
-// import "./Rankings.css";
-// import { useNavigate } from "react-router-dom";
-// import { getLeaderboard } from "../database";
-
-// const Rankings = () => {
-//   const [users, setUsers] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     const fetchLeaderboard = async () => {
-//       try {
-//         const leaderboardData = await getLeaderboard();
-//         setUsers(leaderboardData);
-//       } catch (error) {
-//         console.error("❌ Error fetching leaderboard:", error.message);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchLeaderboard();
-//   }, []);
-
-//   // Sorting logic: Higher score is better, if same score -> lower time is better
-//   const sortedUsers = useMemo(() => {
-//     return [...users].sort((a, b) => {
-//       if (b.score !== a.score) {
-//         return b.score - a.score; 
-//       }
-//       return a.time - b.time;
-//     });
-//   }, [users]);
-
-//   const topUsers = sortedUsers.slice(0, 5);
-
-//   const formatTime = (seconds) => {
-//     const minutes = Math.floor(seconds / 60);
-//     const remainingSeconds = seconds % 60;
-//     return `${minutes}m ${remainingSeconds}s`;
-//   };
-
-//   return (
-//     <div className="RankingsCon">
-//       <div className="RankingsIntro">
-//         <img src="./Logo3.png" alt="Unfake Logo" className="RankUnfakeLogo" />
-//         <h1 className="IntroDes">In the Rankings?</h1>
-//       </div>
-//       <div className="RankTableBg">
-//         {loading ? (
-//           <p className="LoadingText">Loading leaderboard...</p>
-//         ) : (
-//           <table className="RankingsTable">
-//             <thead>
-//               <tr>
-//                 <th>Rank</th>
-//                 <th>Name</th>
-//                 <th>Score</th>
-//                 <th>Time</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {topUsers.map((user, index) => (
-//                 <tr key={user.id}>
-//                   <td>#{index + 1}</td>
-//                   <td>{user.username}</td>
-//                   <td>{user.score}</td>
-//                   <td>{formatTime(user.time)}</td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         )}
-//       </div>
-//       <button className="RankBackBtn" onClick={() => navigate("/competition")}>Back</button>
-//     </div>
-//   );
-// };
-
-// export default Rankings;
-
 import { useState, useEffect } from "react";
 import "./Rankings.css";
 import { useNavigate } from "react-router-dom";
@@ -97,19 +15,6 @@ const Rankings = () => {
     const fetchLeaderboard = async () => {
       try {
         const leaderboardData = await getLeaderboard();
-
-        // // Sort users: prioritize score first (higher is better), then time (lower is better)
-        // const sortedUsers = leaderboardData
-        //   .filter((user) => user.rank > 0) // Remove rank 0 users from display
-        //   .sort((a, b) => {
-        //     // First, compare by score (higher score is better)
-        //     if (b.score !== a.score) {
-        //       return b.score - a.score;
-        //     }
-
-        //     // If scores are equal, compare by time (lower time is better)
-        //     return a.time - b.time;
-        //   });
 
         // ✅ Ensure all users are included before ranking (even rank 0 or undefined)
         const sortedUsers = leaderboardData
