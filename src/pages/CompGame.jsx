@@ -1,8 +1,8 @@
-import "./CompGame.css"; // Import CSS
+import "./CompGame.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { auth, db } from "../firebaseConfig"; // Firebase imports
-import { doc, updateDoc } from "firebase/firestore"; // Firestore functions
+import { auth, db } from "../firebaseConfig"; 
+import { doc, updateDoc } from "firebase/firestore"; 
 
 const CompGame = () => {
   const navigate = useNavigate();
@@ -37,10 +37,10 @@ const CompGame = () => {
           time: timeRemaining, // Save the remaining time to Firestore
         });
 
-        console.log(`✅ User's remaining time (${timeRemaining}) saved in Firestore.`);
+        console.log(`User's remaining time (${timeRemaining}) saved in Firestore.`);
       }
     } catch (error) {
-      console.error("❌ Error updating user's time:", error);
+      console.error("Error updating user's time:", error);
     }
   };
 
@@ -65,13 +65,13 @@ const CompGame = () => {
             <button className="Cancel" onClick={() => navigate("/competition")}>Cancel</button>
             <div className="Timer">
               <p className="CountDown">Time left:</p>
-              <p className="TimerText">{formatTime(timeLeft)}</p> {/* ✅ Countdown Display Fixed */}
+              <p className="TimerText">{formatTime(timeLeft)}</p> {/*Countdown Display Fixed */}
             </div>
           </div>
         </div>
       </div>
 
-      {/* ✅ Moved Google Form inside the same div */}
+      {/*Moved Google Form inside the same div */}
       <div className="google-form-container">
         <iframe 
           src="https://docs.google.com/forms/d/e/1FAIpQLSfmAwqDmOtag5CgvgJYyK4dua7kMj4qFdFfV9f4ycBsOhp7tg/viewform?embedded=true"

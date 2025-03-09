@@ -1,10 +1,7 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signUpUser } from "../database.jsx"; // Import the signup function
+import { signUpUser } from "../database.jsx";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; 
-import { signUpWithX } from "../firebaseConfig"; // Import Twitter Sign-up function
 
 const SignUp = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
@@ -19,10 +16,20 @@ const SignUp = ({ setIsAuthenticated }) => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConPassword, setShowConPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // For general errors
-  const [isChecked, setIsChecked] = useState(false); // Track checkbox state
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
-  
+
+  //Allowed Email Domains
+  const allowedDomains = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com"];
+
+  //Function to check if email domain is allowed
+  const isValidEmailDomain = (email) => {
+    const emailParts = email.split("@");
+    return emailParts.length === 2 && allowedDomains.includes(emailParts[1]);
+  };
+
+  //Password Strength Checker
   const checkPasswordStrength = (password) => {
     setPasswordStrength({
       length: password.length >= 8,
@@ -33,12 +40,22 @@ const SignUp = ({ setIsAuthenticated }) => {
     });
   };
 
+  //Handle Password Input & Live Validation
   const handlePasswordChange = (e) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
     checkPasswordStrength(newPassword);
   };
 
+  //Handle Confirm Password Validation
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  //Check if Password Meets All Criteria
+  const isPasswordValid = () => Object.values(passwordStrength).every((val) => val === true);
+
+  //Handle Sign-Up Process
   const handleSignUp = async () => {
     setErrorMessage("");
 
@@ -47,13 +64,18 @@ const SignUp = ({ setIsAuthenticated }) => {
       return;
     }
 
+    //Validate Email Domain
+    if (!isValidEmailDomain(email)) {
+      setErrorMessage("Invalid email domain. Please use @gmail.com, @yahoo.com, etc.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match.");
       return;
     }
 
-    const { length, uppercase, lowercase, number, special } = passwordStrength;
-    if (!length || !uppercase || !lowercase || !number || !special) {
+    if (!isPasswordValid()) {
       setErrorMessage("Your password is not strong enough. Ensure it meets all requirements.");
       return;
     }
@@ -74,20 +96,9 @@ const SignUp = ({ setIsAuthenticated }) => {
     }
   };
 
-  const handleXSignUp = async () => {
-    try {
-        const user = await signUpWithX();
-        alert("X Sign-Up Successful!");
-        setIsAuthenticated(true);
-        navigate("/unfake");
-    } catch (error) {
-        alert("X Sign-Up Failed: " + error.message);
-    }
-  };
-
   return (
     <div className="auth-container">
-      {/* Logo on the left */}
+      {/* Logo Section */}
       <div className="UnfakePromo">
         <div className="UnfakeLogo1">
           <img src="./Logo.png" alt="" />
@@ -96,7 +107,7 @@ const SignUp = ({ setIsAuthenticated }) => {
         <p className="SloDes">A fake news detection tool for X</p>
       </div>
 
-      {/* Sign Up Box */}
+      {/* Sign-Up Form */}
       <div className="auth-box">
         <h2 className="Sign">Sign Up</h2>
         <div className="SRL">
@@ -112,8 +123,12 @@ const SignUp = ({ setIsAuthenticated }) => {
             placeholder="Enter your email"
             required
             className="EmailPH"
-            id="signUp_email"
           />
+          {!isValidEmailDomain(email) && email.length > 0 && (
+            <p className="EmailErrorMsg">
+              Invalid email domain. Please use @gmail.com, @yahoo.com, etc.
+            </p>
+          )}
 
           <label className="PassLabel">Password:</label>
           <div className="PassCon">
@@ -124,13 +139,8 @@ const SignUp = ({ setIsAuthenticated }) => {
               placeholder="Enter a new password"
               required
               className="PassInput"
-              id="signUp_password"
             />
-            <button
-              type="button"
-              className="ShowPassBtn"
-              onClick={() => setShowPassword(!showPassword)}
-            >
+            <button type="button" className="ShowPassBtn" onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? <FaEye /> : <FaEyeSlash />}
             </button>
           </div>
@@ -140,67 +150,33 @@ const SignUp = ({ setIsAuthenticated }) => {
             <input
               type={showConPassword ? "text" : "password"}
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={handleConfirmPasswordChange}
               placeholder="Re-enter your password"
               required
               className="ConPassPH"
-              id="confirm_password"
             />
-            <button
-              type="button"
-              className="ShowPassBtn"
-              onClick={() => setShowConPassword(!showConPassword)}
-            >
+            <button type="button" className="ShowPassBtn" onClick={() => setShowConPassword(!showConPassword)}>
               {showConPassword ? <FaEye /> : <FaEyeSlash />}
             </button>
           </div>
 
+          {/*Live Password Strength Display */}
           <div className="PwStrength">
-            <p className="PwRec" style={{ color: passwordStrength.length ? "#90EE90" : "pink" }}> • 8 characters</p>
-            <p className="PwRec" style={{ color: passwordStrength.uppercase ? "#90EE90" : "pink" }}> • At least 1 uppercase letter (A-Z)</p>
-            <p className="PwRec" style={{ color: passwordStrength.lowercase ? "#90EE90" : "pink" }}> • At least 1 lowercase letter (a-z)</p>
-            <p className="PwRec" style={{ color: passwordStrength.number ? "#90EE90" : "pink" }}> • At least 1 number (0-9)</p>
-            <p className="PwRec" style={{ color: passwordStrength.special ? "#90EE90" : "pink" }}> • At least 1 special character (!@#$%^&*)</p>
+            <p style={{ color: passwordStrength.length ? "#90EE90" : "pink" }}>• 8 characters</p>
+            <p style={{ color: passwordStrength.uppercase ? "#90EE90" : "pink" }}>• At least 1 uppercase letter (A-Z)</p>
+            <p style={{ color: passwordStrength.lowercase ? "#90EE90" : "pink" }}>• At least 1 lowercase letter (a-z)</p>
+            <p style={{ color: passwordStrength.number ? "#90EE90" : "pink" }}>• At least 1 number (0-9)</p>
+            <p style={{ color: passwordStrength.special ? "#90EE90" : "pink" }}>• At least 1 special character (!@#$%^&*)</p>
           </div>
 
           {/* Display error messages */}
-          {errorMessage && <p className="error-message" style={{ color: "red" }}>{errorMessage}</p>}
+          {errorMessage && <p className="error-message" style={{ color: "pink" }}>{errorMessage}</p>}
           <hr className="Line"/>
 
-          <div className="PPCon">
-            <div className="CheckBoxCon">
-              <input
-                type="checkbox"
-                id="agreeCheck"
-                className="CheckBox"
-                checked={isChecked}
-                onChange={(e) => setIsChecked(e.target.checked)}
-              />
-            </div>
-            <p className="PPLabel">
-              You are agreeing to our  
-              <a href="/privacy" className="PPLink">Privacy Policy</a> &
-              <a href="/terms" className="TermsLink">Terms of Service</a>
-            </p>
-          </div>
-
-          <button
-            className="NextBtn"
-            type="button"
-            onClick={handleSignUp}
-            disabled={
-              !passwordStrength.length ||
-              !passwordStrength.uppercase ||
-              !passwordStrength.lowercase ||
-              !passwordStrength.number ||
-              !passwordStrength.special ||
-              !isChecked
-            }
+          <button className="NextBtn" type="button" onClick={handleSignUp}
+            disabled={!isPasswordValid() || !isChecked || !isValidEmailDomain(email)}
           >
             Next
-          </button>
-          <button className="SWXBtn" type="button" onClick={handleXSignUp}>
-            Sign Up with X
           </button>
         </form>
       </div>

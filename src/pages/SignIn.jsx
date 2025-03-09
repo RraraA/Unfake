@@ -1,10 +1,7 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInUser } from "../database.jsx"; 
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { signInWithX } from "../firebaseConfig"; // Corrected Import
 
 const SignIn = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
@@ -32,17 +29,6 @@ const SignIn = ({ setIsAuthenticated }) => {
       navigate("/unfake");
     } catch (error) {
       alert(error.message);
-    }
-  };
-
-  const handleXLogIn = async () => {
-    try {
-      const user = await signInWithX();
-      alert("X Login Successful!");
-      setIsAuthenticated(true);
-      navigate("/unfake");
-    } catch (error) {
-      alert("X Login Failed: " + error.message);
     }
   };
 
@@ -115,9 +101,6 @@ const SignIn = ({ setIsAuthenticated }) => {
           </div>
 
           <button className="NextBtn" type="button" onClick={handleSignIn}>Next</button>
-          <button className="SWXBtn" type="button" onClick={handleXLogIn}>
-            Login with X
-          </button>
         </form>
       </div>
     </div>
