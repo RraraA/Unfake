@@ -14,35 +14,63 @@ const Downloads = () => {
   // Steps for the User Guide
   const userGuideSteps = [
     {
-      title: (<h1 className="Title">Step 1: Activate Unfake</h1>),
+      title: (<h1 className="Title">Step 1: Download Unfake</h1>),
       content: (
         <div className="FCG">
           <p><br />
             - Click on the “Download” button above. <br />
-            - Open your browser's extensions panel. <br />
-            - Navigate "Unfake" and turn on the toggle for Unfake.
+            <div>
+              - Visit "chrome://extensions/"
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText("chrome://extensions/");
+                  alert("Copied! Paste it into your Chrome address bar.");
+                }}
+                className="copyBtn"
+              >Copy Link</button>
+            </div>
+            - Turn on "Developer Mode" on the top right corner of your screen. <br />
+            - Click on "Load Unpack", then find and select your downloaded Unfake File. <br />
+            - The Unfake Extension should now appear.
           </p>
-          <img src="/DownloadPics/1A.png" className="GuideImage1a"/>
-          <img src="/DownloadPics/1B.png" className="GuideImage1b" />
+          <div className="Pics">
+            <img src="/DownloadPics/0A.png" className="GuideImage0a"/>
+            <img src="/DownloadPics/0B.png" className="GuideImage0b" />
+          </div>
         </div>
       )
     },
     {
-      title: (<h1 className="Title">Step 2: Activate Unfake on X</h1>),
+      title: (<h1 className="Title">Step 2: Activate Unfake</h1>),
       content: (
         <div className="FCG">
           <p><br />
-            - Go to X by clicking “X” on the navigation bar.<br />
-            - Click the "Puzzle" icon → Select Unfake.
-            - Turn on the "Overlay" toggle for Unfake.
+            - Navigate "Unfake" and turn on the toggle for Unfake.
           </p>
-          <img src="/DownloadPics/2A.png" className="GuideImage2a"/>
-          <img src="/DownloadPics/2B.png" className="GuideImage2b" />
+            <img src="/DownloadPics/1B.png" className="GuideImage1b" />
         </div>
       )
     },
     {
-      title: (<h1 className="Title">Step 3: Using Unfake</h1>),
+      title: (<h1 className="Title">Step 3: Activate Unfake on X</h1>),
+      content: (
+        <div className="FCG">
+          <p><br />
+            - Visit X by clicking “X” on the navigation bar.<br />
+            - Click the "Puzzle" icon → Select Unfake.
+            - Turn on the "Overlay" toggle for Unfake.
+            - Please Sign in to use Unfake.
+          </p>
+          <div className="Pics">
+            <img src="/DownloadPics/2A.png" className="GuideImage2a"/>
+            <img src="/DownloadPics/2B.png" className="GuideImage2c" />
+            <img src="/DownloadPics/2C.png" className="GuideImage2c" />
+            </div>
+        </div>
+      )
+    },
+    {
+      title: (<h1 className="Title">Step 4: Using Unfake</h1>),
       content: (
         <div className="FCG">
           <p><br />
@@ -58,15 +86,34 @@ const Downloads = () => {
             - Users can then paste the Tweet Link in the space provided by the Unfake Extension's Pop-Up box. <br />
             - Upon submission, users should view the voting section below the X post.
           </p>
-          <img src="/DownloadPics/3C.png" className="GuideImage3c" />
-          <img src="/DownloadPics/3D.png" className="GuideImage3d" />
-          <img src="/DownloadPics/3E.png" className="GuideImage3e" />
-          <img src="/DownloadPics/3A.png" className="GuideImage3a" />
+          <div className="Pics">
+            <img src="/DownloadPics/3C.png" className="GuideImage3c" />
+            <img src="/DownloadPics/3D.png" className="GuideImage3d" />
+          </div>
+          <div className="Pics">
+            <img src="/DownloadPics/3E.png" className="GuideImage3e" />
+            <img src="/DownloadPics/3A.png" className="GuideImage3a" />
+          </div>
         </div>
       ),
     },
     {
-      title: (<h1 className="Title">Step 4: Disabling Unfake</h1>),
+      title: (<h1 className="Title">Step 5: Checked Algorithm Score</h1>),
+      content: (
+        <div className="FCG">
+          <p><br />
+            - Locate to Unfake's "Accounts" page and click on "All Post History".<br />
+            - Paste your post link to retrieve the lastest Transaction Hash, which you should copy. <br />
+            - Click on "Sirius Explorer", then paste your copied Transation Hash to search for your Checked Algorithm Score on ProximaX's Sirius Explorer. 
+          </p>
+          <div className="Pics">
+            <img src="/DownloadPics/4.png" className="GuideImage4" />
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: (<h1 className="Title">Step 6: Disabling Unfake</h1>),
       content: (
         <div className="FCG">
           <p><br />
@@ -74,7 +121,7 @@ const Downloads = () => {
             - Click on Unfake.
             - Turn off the "Overlay" toggle to disable Unfake.
           </p>
-          <img src="/DownloadPics/4.png" className="GuideImage4" />
+          <img src="/DownloadPics/5.png" className="GuideImage5" />
         </div>
       )
     }
@@ -105,7 +152,7 @@ const Downloads = () => {
           Detecting Fake News on X using AI, Crowdsourcing, and Blockchain Methodologies.
         </p>
 
-        <a href="https://github.com/user-attachments/files/18936900/UnfakeEx.zip" download>
+        <a href="https://github.com/RraraA/UnfakeEx/archive/refs/heads/ExCP.zip" download>
           <button className="DownloadBtn">Download Unfake</button>
           </a>
 

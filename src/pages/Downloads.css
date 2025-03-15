@@ -84,6 +84,50 @@
     margin-bottom: 10px;
 }
 
+.chromeEx {
+    color: rgb(255, 115, 71);
+    text-decoration: none;
+}
+
+.copyBtn {
+    background-color: transparent;
+    padding: 5px;
+    font-family: "Play";
+    border: none;
+    color: rgb(255, 115, 71);
+    border-radius: 50px;
+    transition: 0.2s ease-in-out;
+    width: 100px;
+    cursor: pointer;
+}
+
+.copyBtn:hover {
+    color: rgb(139, 149, 255);
+}
+
+/* 0 */
+.GuideImage0a{
+    height: 150px;
+    width: 380px;
+    margin: 40px 50px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgb(255, 255, 255, 0.3);;
+}
+
+.GuideImage0b{
+    height: 150px;
+    width: 300px;
+    margin: 40px 50px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgb(255, 255, 255, 0.3);;
+}
+
+.Pics {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* 1 */
 .GuideImage1a {
     height: 300px;
@@ -103,16 +147,16 @@
 
 /* 2 */
 .GuideImage2a{
-    height: 300px;
-    width: 400px;
+    height: 230px;
+    width: 315px;
     margin: 40px 40px;
     border-radius: 15px;
     box-shadow: 0px 0px 10px rgb(255, 255, 255, 0.3);
 }
 
-.GuideImage2b {
-    height: 300px;
-    width: 300px;
+.GuideImage2c {
+    height: 230px;
+    width: 270px;
     margin: 40px 40px;
     border-radius: 15px;
     box-shadow: 0px 0px 10px rgb(255, 255, 255, 0.3);
@@ -152,10 +196,18 @@
 }
 
 .GuideImage4 {
+    height: 200px;
+    width: 650px;
+    margin: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px rgb(255, 255, 255, 0.3);
+}
+
+.GuideImage5 {
     height: 300px;
     width: 350px;
     margin: 40px 50px;
-    border-radius: 15px;
+    border-radius: 20px;
     box-shadow: 0px 0px 10px rgb(255, 255, 255, 0.3);
 }
 

@@ -26,7 +26,9 @@ const Accounts = ({ setIsAuthenticated }) => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConPassword, setShowConPassword] = useState(false);
-
+  const [searchTerm, setSearchTerm] = useState(""); 
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const [transactions, setTransactions] = useState([]);
 
   //Fetch user data from Firestore
   useEffect(() => {
@@ -126,6 +128,14 @@ const Accounts = ({ setIsAuthenticated }) => {
     }
   };
 
+  useEffect(() => {
+    setFilteredTransactions(
+      transactions.filter((transaction) =>
+        transaction.post_link.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, transactions]);
+
   const handleSaveChanges = async () => {
     setIsEditing(false);
     const user = auth.currentUser;
@@ -161,7 +171,7 @@ const Accounts = ({ setIsAuthenticated }) => {
         }
       }
   
-      // ✅ **Password update with validation**
+      // **Password update with validation**
       if (newPassword) {
         if (newPassword === password) {
           alert("New password cannot be the same as the old password.");
@@ -173,7 +183,7 @@ const Accounts = ({ setIsAuthenticated }) => {
           return;
         }
   
-        // ✅ Validate password strength
+        //Validate password strength
         const errors = validatePassword(newPassword);
         if (errors.length > 0) {
           alert("Password does not meet the criteria:\n" + errors.join("\n"));
@@ -185,21 +195,18 @@ const Accounts = ({ setIsAuthenticated }) => {
             alert("Please enter your current password before changing it.");
             return;
           }
-  
-          // ✅ Re-authenticate user before updating password
+
           const credential = EmailAuthProvider.credential(user.email, password);
           await reauthenticateWithCredential(user, credential);
   
-          // ✅ Update password in Firebase Authentication
           await updatePassword(user, newPassword);
   
-          // ✅ Update Firestore with a timestamp
           await updateDoc(userRef, { passwordUpdatedAt: new Date() });
   
           alert("Password updated successfully! You will need to use your new password next time.");
           setNewPassword("");
           setConfirmNewPassword("");
-          setPassword(""); // Clear old password field
+          setPassword(""); 
         } catch (error) {
           console.error("Error updating password:", error);
   
@@ -243,6 +250,33 @@ const Accounts = ({ setIsAuthenticated }) => {
     navigate("/signin");
   };
 
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const transactionsRef = collection(db, "blockchain_transactions");
+        const querySnapshot = await getDocs(transactionsRef);
+  
+        if (!querySnapshot.empty) {
+          const transactionsData = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          console.log("Fetched transactions:", transactionsData);
+          setTransactions(transactionsData);
+        } else {
+          console.log("No transactions found.");
+          setTransactions([]);
+        }
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      }
+    };
+  
+    if (activeSection === "History") {
+      fetchTransactions();
+    }
+  }, [activeSection]);  
+
   return (
     <div className="AccountsCon">
       <div className="VideoCon2">
@@ -271,8 +305,8 @@ const Accounts = ({ setIsAuthenticated }) => {
             <button className={`ProfileBtn ${activeSection === "MyInfo" ? "ActiveBtn" : ""}`} onClick={() => setActiveSection("MyInfo")}>
               My Information
             </button>
-            <button className={`ProfileBtn ${activeSection === "MyHistory" ? "ActiveBtn" : ""}`} onClick={() => setActiveSection("MyHistory")}>
-              My History
+            <button className={`ProfileBtn ${activeSection === "History" ? "ActiveBtn" : ""}`} onClick={() => setActiveSection("History")}>
+              All Post History
             </button>
             <button className={`ProfileBtn ${activeSection === "LogOut" ? "ActiveBtn" : ""}`} onClick={() => setActiveSection("LogOut")}>
               Log Out
@@ -366,11 +400,58 @@ const Accounts = ({ setIsAuthenticated }) => {
           </div>
         )}
 
-        {activeSection === "MyHistory" && 
-        <div className="MyHistory">
-          <h2>My History</h2>
-          <p>No activity recorded yet.</p>
-        </div>}
+        {activeSection === "History" && (
+          <div className="PostHistory">
+            <h1>Post History</h1><br />
+            <p className="ProxInstruct">Use the lastest Transaction Hash to check for the Post's Checked Algorithm Score via ProximaX's <br />
+              <a href="https://bctestnetexplorer.xpxsirius.io/#/" target="blank" className="ProxSE"> Sirius Explorer</a> - select "Testnet 2"
+            </p>
+                  <input
+                    type="text"
+                    placeholder="Paste X post link here..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="SearchBar"
+                  />
+            {transactions.length > 0 ? (
+              <table className="TransactionsTable">
+                <thead>
+                  <tr>
+                    <th>X Post Link</th>
+                    <th>Latest Transaction Hash</th>
+                    <th>Hash History</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredTransactions.map((transaction) => {
+                    //Check if the row matches the searched Post ID
+                    const isMatch = searchTerm && transaction.id.includes(searchTerm);
+
+                    return (
+                      <tr key={transaction.id}>
+                        <td><div style={{ minWidth: "140px" }}>{transaction.post_link}</div></td>
+                        <td><div style={{ minWidth: "220px" }}>{transaction.latest_transaction_hash || "N/A"}</div></td>
+                        <td>
+                          <div style={{ minWidth: "220px" }}>
+                            {transaction.transaction_hashes && transaction.transaction_hashes.length > 0 ? (
+                              <ul style={{ listStyleType: "disc", paddingLeft: "20px", margin: "5px 0" }}>
+                                {transaction.transaction_hashes.map((hash, index) => (
+                                  <li key={index} style={{ marginBottom: "5px" }}>{hash}</li>
+                                ))}
+                              </ul>
+                            ) : "No transactions"}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            ) : (
+              <p>No transactions found.</p>
+            )}
+          </div>
+        )}
 
         {activeSection === "LogOut" && 
         <div className="LogOut">

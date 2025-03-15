@@ -14,7 +14,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 110%;
+  height: 105%;
   width: 500px;
   margin: 40px 20px 0px 20px;
   padding: 0px 40px;
@@ -170,5 +170,108 @@
 }
 
 .SaveBtn:hover, .EditBtn:hover, .ConLOBtn:hover {
-    background-color: rgb(8, 62, 209)
+    background-color: rgb(8, 62, 209);
+}
+
+.PostHistory {
+  max-height: 90%;
+  overflow-y: auto; 
+  overflow-x: hidden;
+  padding: 10px;
+  margin: 40px 10px;
+  margin-bottom: auto;
+}
+
+.ProxInstruct {
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.ProxSE {
+  color: rgb(255, 115, 71);
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.ProxSE:hover {
+  color: rgb(108, 214, 240);
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.SearchBar {
+  width: 100%;
+  margin-bottom: 40px;
+  padding: 10px;
+  padding-left: 15px;
+  border-radius: 50px;
+  border: 0.7px solid rgb(255, 255, 255, 0.6);
+  background-color:rgb(255, 255, 255, 0.1);
+  font-size: 13px;
+  font-family: "play";
+  color: white;
+}
+
+.SearchBar::placeholder {
+  color: rgb(255, 255, 255, 0.6);
+  position: fixed;
+}
+
+.TransactionsTable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Ensures columns respect their width */
+}
+
+.TransactionsTable th {
+  font-size: 15px;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid rgb(255, 255, 255, 0.35);
+  background-color: rgb(8, 62, 209);
+  color: white;
+}
+
+.TransactionsTable td {
+  border: 1px solid rgb(255, 255, 255, 0.35);
+  background-color: rgba(0, 0, 0, 0.3);
+  font-size: 13px;
+  text-align: left;
+  color: white;
+  height: 50px; /* Fixed row height */
+  padding: 5px;
+  vertical-align: middle;
+  word-wrap: break-word; /* Ensures text wraps */
+  white-space: normal; /* Allows text wrapping */
+  overflow: hidden; /* Prevents overflow */
+}
+
+.TransactionsTable td div {
+  max-height: 50px;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word; /* Ensures text wraps */
+  white-space: normal; /* Allows text wrapping */
+}
+
+.TransactionsTable th:nth-child(1), .TransactionsTable td:nth-child(1) {
+  width: 150px;
+}
+
+.TransactionsTable th:nth-child(2), .TransactionsTable td:nth-child(2),
+.TransactionsTable th:nth-child(3), .TransactionsTable td:nth-child(3) {
+  width: 240px; 
+}
+
+.TransactionsTable td div::-webkit-scrollbar {
+  width: 5px;
+}
+
+.TransactionsTable td div::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
 }
