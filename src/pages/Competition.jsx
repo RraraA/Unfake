@@ -3,6 +3,8 @@ import { useNavigate  } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import { auth, db } from "../firebaseConfig";
 import { doc, getDoc, updateDoc, collection, getDocs } from "firebase/firestore";
+import { query, where } from "firebase/firestore";
+
 
 const Competition = () => {
   const navigate = useNavigate();
@@ -76,7 +78,6 @@ const Competition = () => {
       // Function to update credibility for all users in the leaderboard
   const updateCredibilityForAllUsers = async () => {
     try {
-      // Fetch all users from the leaderboard collection
       const leaderboardRef = collection(db, "leaderboard");
       const querySnapshot = await getDocs(leaderboardRef);
 
@@ -127,19 +128,25 @@ const Competition = () => {
       const fetchUserDetails = async () => {
         const user = auth.currentUser;
         if (user) {
-          // Fetch from "leaderboard" collection instead of "user"
-          const userRef = doc(db, "leaderboard", user.uid);
-          const userSnapshot = await getDoc(userRef);
-
-          if (userSnapshot.exists()) {
-            const userData = userSnapshot.data();
-            const userScore = userData.score || 0; // Default to 0 if no score exists
-            console.log("Fetched user score:", userScore);
-
-            setScore(userScore);
-          } else {
-            console.warn("User document not found in Firestore.");
-            setScore(0); // Default if user is not found
+          try {
+            const leaderboardRef = collection(db, "leaderboard");
+            const q = query(leaderboardRef, where("email", "==", user.email)); // 🔍 Search by email
+            const querySnapshot = await getDocs(q);
+      
+            if (!querySnapshot.empty) {
+              const userDoc = querySnapshot.docs[0]; // Get the first matching document
+              const userData = userDoc.data();
+              
+              console.log("Fetched user data:", userData); // Debugging log
+      
+              setScore(userData.score || 0);
+              setGrade(determineGradeAndCredibility(userData.score).grade);
+              setCredibility(determineGradeAndCredibility(userData.score).credibility);
+            } else {
+              console.warn("No matching user found in Firestore.");
+            }
+          } catch (error) {
+            console.error("Error fetching user details:", error);
           }
         }
       };

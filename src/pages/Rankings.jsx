@@ -45,7 +45,7 @@ const Rankings = () => {
         // Find the logged-in user
         const authUser = auth.currentUser;
         if (authUser) {
-          const foundUser = sortedUsers.find((user) => user.uid === authUser.uid);
+          const foundUser = sortedUsers.find((user) => user.email === authUser.email);
           setCurrentUser(foundUser || null);
         }
   

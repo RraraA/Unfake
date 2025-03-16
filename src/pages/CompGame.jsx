@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { auth, db } from "../firebaseConfig"; 
 import { doc, updateDoc } from "firebase/firestore"; 
+import { query, where, getDocs, collection } from "firebase/firestore";
+
 
 const CompGame = () => {
   const navigate = useNavigate();
@@ -32,12 +34,23 @@ const CompGame = () => {
     try {
       const user = auth.currentUser;
       if (user) {
-        const userRef = doc(db, "leaderboard", user.uid); // Reference to user's document in Firestore
-        await updateDoc(userRef, {
-          time: timeRemaining, // Save the remaining time to Firestore
-        });
-
-        console.log(`User's remaining time (${timeRemaining}) saved in Firestore.`);
+        // 🔍 Query Firestore to find the correct document using email
+        const leaderboardRef = collection(db, "leaderboard");
+        const q = query(leaderboardRef, where("email", "==", user.email));
+        const querySnapshot = await getDocs(q);
+  
+        if (!querySnapshot.empty) {
+          const userDoc = querySnapshot.docs[0]; // Get the first matching document
+          const userRef = doc(db, "leaderboard", userDoc.id);
+  
+          await updateDoc(userRef, {
+            time: timeRemaining, // Save the remaining time to Firestore
+          });
+  
+          console.log(`User's remaining time (${timeRemaining}) saved in Firestore.`);
+        } else {
+          console.warn("User not found in Firestore.");
+        }
       }
     } catch (error) {
       console.error("Error updating user's time:", error);
@@ -86,7 +99,7 @@ const CompGame = () => {
         </iframe>
       </div>
 
-      <button className="BackButton" onClick={handleBackToCompetition}>Back to Competition</button>
+      <button className="BackButton" onClick={handleBackToCompetition}>Submit</button>
     </div>
   );
 };
