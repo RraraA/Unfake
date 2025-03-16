@@ -225,13 +225,13 @@ return (
       </p>
       <p className="GameDes">
         Each user will be given 1 hour to complete the test as they are ENCOURAGED to conduct 
-        research before answering questions. Scores of each user will restart every competition 
-        to promote fairness and allow users to have a chance to become the top ranker. When users 
-        participate in the voting of news, their credibility scores will be determined by these 
+        research before answering questions. Do research do determine if a news piece is "Real", "Not Sure" or "Fake".
+        Scores of each user will restart every competition to promote fairness and to allow users to have a chance to become the top ranker. 
+        <br /><br />When users participate in the voting of news, their credibility scores will be determined by these 
         competitions and contribute to our Checked algorithm for determining the news.
       </p>
       <p className="GameDes">
-        Users will only receive their results one week after the competition has ended.
+        Users will receive their results after submiting the quiz.
       </p>
       <h1 className="CSTableIntro">Credibility Score</h1>
       <img src="/CSTable.png" alt="Credibility Score Table" className="CSTable" />
