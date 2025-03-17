@@ -40,14 +40,27 @@ const Rankings = () => {
           }
         });
   
-        setUsers(sortedUsers);
+        setUsers(sortedUsers); // Save leaderboard to state
   
-        // Find the logged-in user
-        const authUser = auth.currentUser;
-        if (authUser) {
-          const foundUser = sortedUsers.find((user) => user.email === authUser.email);
-          setCurrentUser(foundUser || null);
-        }
+        // Wait for authentication state to be available
+        auth.onAuthStateChanged((authUser) => {
+          if (authUser) {
+            console.log("Auth Current User:", authUser.email, authUser.uid);
+            console.log("Leaderboard Data:", sortedUsers);
+        
+            // Check if any user in leaderboard has matching UID
+            const foundUser = sortedUsers.find((user) => user.uid === authUser.uid);
+            
+            console.log("Matching User:", foundUser); // Debugging
+            
+            // Debugging: Print all UIDs in leaderboard to check if they match
+            sortedUsers.forEach((user, index) => {
+              console.log(`User ${index + 1}: ${user.username}, UID: ${user.uid}`);
+            });
+        
+            setCurrentUser(foundUser || null);
+          }
+        });        
   
         await updateRanks(sortedUsers);
       } catch (error) {
@@ -58,26 +71,71 @@ const Rankings = () => {
     };
   
     fetchLeaderboard();
-  }, []);
+  }, []);   
 
+  async function submitScore(username, score) {
+    try {
+        // Ensure user exists and get UID
+        const userRef = doc(db, "users", username);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+            const userData = userSnap.data();
+            const uid = userData.uid;
+
+            // Save to leaderboard
+            const leaderboardRef = doc(db, "leaderboard", uid);
+            await setDoc(leaderboardRef, {
+                username: userData.username,
+                score: score,
+                uid: uid
+            });
+
+            console.log("Leaderboard updated with UID!");
+        } else {
+            console.error("User not found!");
+        }
+    } catch (error) {
+        console.error("Error updating leaderboard:", error);
+    }
+}
+
+  
   const updateRanks = async (sortedUsers) => {
     try {
       for (let i = 0; i < sortedUsers.length; i++) {
         const user = sortedUsers[i];
         const userRef = doc(db, "leaderboard", user.id);
-
-        // Assign rank based on position in sorted list (rank starts from 1)
-        const rank = i + 1; // Rank starts at 1
-
-        // Update the rank in Firestore
-        await updateDoc(userRef, { rank: rank });
-
-        console.log(`Updated rank for ${user.username}: ${rank}`);
+  
+        // Assign rank based on position in sorted list
+        const rank = i + 1;
+  
+        // Ensure UID exists
+        let updatedData = { rank: rank }; // Start with rank only
+  
+        // If UID is missing, fetch it for the logged-in user
+        if (!user.uid) {
+          console.warn(`User ${user.username} has no UID. Checking authentication...`);
+          const authUser = auth.currentUser;
+          if (authUser && authUser.email === user.email) {
+            user.uid = authUser.uid; // Assign correct UID
+          }
+        }
+  
+        // Only update Firestore with UID if it exists
+        if (user.uid) {
+          updatedData.uid = user.uid;
+        }
+  
+        // Update Firestore
+        await updateDoc(userRef, updatedData);
+  
+        console.log(`Updated rank for ${user.username}: ${rank}, UID: ${user.uid || "Not Updated"}`);
       }
     } catch (error) {
       console.error("Error updating ranks:", error);
     }
-  };
+  };  
 
   //Format time for display
   const formatTime = (seconds) => {
