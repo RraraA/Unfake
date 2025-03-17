@@ -81,7 +81,7 @@ const SignUp = ({ setIsAuthenticated }) => {
     }
 
     if (!isChecked) {
-      setErrorMessage("You must agree to the Privacy Policy before signing up.");
+      alert("You must agree to the Privacy Policy before signing up.");
       return;
     }
 
@@ -172,12 +172,27 @@ const SignUp = ({ setIsAuthenticated }) => {
           {/* Display error messages */}
           {errorMessage && <p className="error-message" style={{ color: "pink" }}>{errorMessage}</p>}
           <hr className="Line"/>
-
-          <button className="NextBtn" type="button" onClick={handleSignUp}
-            disabled={!isPasswordValid() || !isChecked || !isValidEmailDomain(email)}
-          >
-            Next
-          </button>
+          {/* Checkbox Section */}
+          <div className="PPCon">
+            <div className="CheckBoxCon">
+            <input 
+              type="checkbox" 
+              id="agreeCheck" 
+              className="CheckBox" 
+              checked={isChecked}
+              onChange={(e) => {
+                setIsChecked(e.target.checked);
+                console.log("Checkbox checked:", e.target.checked);
+              }}
+            />
+            </div>
+            <p className="PPLabel">
+              You are agreeing to our  
+              <a href="/privacy" className="PPLink">Privacy Policy</a> &
+              <a href="/terms" className="TermsLink">Terms of Service</a>
+            </p>
+          </div>
+          <button className="NextBtn" type="button" onClick={handleSignUp}>Next</button>
         </form>
       </div>
     </div>

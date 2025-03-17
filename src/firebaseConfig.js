@@ -21,41 +21,5 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// Initialize Twitter Auth Provider
-const provider = new TwitterAuthProvider();
-
-// Function to sign in with X (Twitter)
-export const signInWithX = async () => {
-    try {
-        const result = await signInWithPopup(auth, provider);
-        return result.user; // Returns user object after successful login
-    } catch (error) {
-        console.error("X Login Error:", error);
-        throw error;
-    }
-};
-
-export const signUpWithX = async () =>  {
-    try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-
-        // Check if user already exists in Firestore
-        const userRef = doc(db, "users", user.uid);
-        await setDoc(userRef, {
-            uid: user.uid,
-            name: user.displayName,
-            email: user.email || "N/A", // Twitter sometimes doesn't provide email
-            profileImage: user.photoURL,
-            twitterHandle: user.reloadUserInfo.screenName
-        }, { merge: true });
-
-        return user; // Return user data
-    } catch (error) {
-        console.error("X Sign-Up Error:", error);
-        throw error;
-    }
-};
-
 // Export auth and db for use in other files
 export { auth, db, storage };
